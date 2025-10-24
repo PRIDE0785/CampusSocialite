@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Hack Terminal</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        :root {
+            --primary: #00ff41;
+            --secondary: #008f11;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --terminal-bg: rgba(10, 10, 10, 0.95);
+            --glow: 0 0 5px var(--primary), 0 0 10px var(--primary);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--darker);
+            color: var(--primary);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 60%, rgba(0, 143, 17, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--secondary);
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: var(--glow);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .terminal {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+        
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--secondary);
+        }
+        
+        .terminal-title {
+            font-weight: bold;
+        }
+        
+        .terminal-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .terminal-line {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .prompt {
+            color: var(--secondary);
+        }
+        
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-line input {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            flex-grow: 1;
+            padding: 5px;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .panel {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+        }
+        
+        .panel-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--secondary);
+        }
+        
+        .mission-list {
+            list-style-type: none;
+        }
+        
+        .mission-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(0, 255, 65, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mission-item:hover {
+            color: white;
+            text-shadow: var(--glow);
+        }
+        
+        .mission-item.completed {
+            color: var(--secondary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .hacking-game {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hacking-container {
+            width: 80%;
+            max-width: 800px;
+            background-color: var(--terminal-bg);
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+        
+        .code-display {
+            background-color: var(--darker);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            min-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .hacking-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background-color: var(--dark);
+            color: var(--primary);
+            border: 1px solid var(--secondary);
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            color: var(--dark);
+            box-shadow: var(--glow);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--dark);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--primary);
+            padding: 10px 15px;
+            border-radius: 3px;
+            box-shadow: var(--glow);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-form {
+            background-color: var(--terminal-bg);
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--dark);
+            border: 1px solid var(--secondary);
+            border-radius: 3px;
+            color: var(--primary);
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .success {
+            color: #00ff41;
+        }
+        
+        .error {
+            color: #ff0033;
+        }
+        
+        .warning {
+            color: #ffaa00;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-form">
+            <h2>CYBER HACK TERMINAL</h2>
+            <div class="form-group">
+                <label for="username">Hacker Alias:</label>
+                <input type="text" id="username" placeholder="Enter your hacker name">
+            </div>
+            <button class="btn btn-primary" id="loginBtn" style="width: 100%;">ACCESS TERMINAL</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">CYBER HACK TERMINAL v2.1</div>
+            <div class="user-info">
+                <div>User: <span id="userDisplay">[NOT CONNECTED]</span></div>
+                <div>Security Level: <span id="securityLevel">0</span></div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-title">MAIN TERMINAL</div>
+                    <div>Connection: <span class="success">SECURE</span></div>
+                </div>
+                <div class="terminal-content" id="terminalOutput">
+                    <div class="terminal-line">Initializing Cyber Hack Terminal v2.1...</div>
+                    <div class="terminal-line">Establishing secure connection...</div>
+                    <div class="terminal-line success">Connection established. Encryption active.</div>
+                    <div class="terminal-line">Type 'help' for available commands.</div>
+                    <div class="terminal-line"><br></div>
+                </div>
+                <div class="input-line">
+                    <span class="prompt">root@hack-terminal:~$ </span>
+                    <input type="text" id="terminalInput" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="panel">
+                    <div class="panel-title">ACTIVE MISSIONS</div>
+                    <ul class="mission-list" id="missionList">
+                        <li class="mission-item" data-mission="1">Infiltrate Data Fortress</li>
+                        <li class="mission-item" data-mission="2">Decrypt Security Protocol</li>
+                        <li class="mission-item" data-mission="3">Bypass Firewall System</li>
+                        <li class="mission-item" data-mission="4">Access Mainframe</li>
+                        <li class="mission-item" data-mission="5">Extract Classified Data</li>
+                    </ul>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-title">HACKER STATS</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div>Reputation</div>
+                            <div class="stat-value" id="reputationStat">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>Skills</div>
+                            <div class="stat-value" id="skillsStat">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>Missions</div>
+                            <div class="stat-value" id="missionsStat">0/5</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>Firewall Level</div>
+                            <div class="stat-value" id="firewallStat">1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-title">QUICK COMMANDS</div>
+                    <button class="btn" id="scanBtn">SCAN NETWORK</button>
+                    <button class="btn" id="firewallBtn">FIREWALL TEST</button>
+                    <button class="btn" id="decryptBtn">DECRYPT TOOL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="hacking-game" id="hackingGame">
+        <div class="hacking-container">
+            <div class="close-btn" id="closeHacking">X</div>
+            <h2 id="hackingTitle">CODE BREAKING SEQUENCE</h2>
+            <div class="code-display" id="codeDisplay">
+                // ENCRYPTED CODE WILL APPEAR HERE
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="hackingProgress"></div>
+            </div>
+            <div>Hacking Progress: <span id="progressText">0%</span></div>
+            <div class="hacking-controls">
+                <button class="btn" id="startHackBtn">INITIATE HACK</button>
+                <button class="btn" id="boostHackBtn">BOOST PROCESSING</button>
+                <button class="btn btn-primary" id="completeHackBtn" disabled>COMPROMISE SYSTEM</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <div id="notificationText">Notification message</div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase (commented out for safety - uncomment and add your config)
+        // firebase.initializeApp(firebaseConfig);
+        // const database = firebase.database();
+
+        // Game state
+        const gameState = {
+            username: "",
+            reputation: 0,
+            skills: 0,
+            completedMissions: 0,
+            firewallLevel: 1,
+            currentMission: null,
+            isHacking: false,
+            hackingProgress: 0
+        };
+
+        // DOM elements
+        const loginScreen = document.getElementById('loginScreen');
+        const loginBtn = document.getElementById('loginBtn');
+        const usernameInput = document.getElementById('username');
+        const userDisplay = document.getElementById('userDisplay');
+        const securityLevel = document.getElementById('securityLevel');
+        const terminalOutput = document.getElementById('terminalOutput');
+        const terminalInput = document.getElementById('terminalInput');
+        const missionList = document.getElementById('missionList');
+        const reputationStat = document.getElementById('reputationStat');
+        const skillsStat = document.getElementById('skillsStat');
+        const missionsStat = document.getElementById('missionsStat');
+        const firewallStat = document.getElementById('firewallStat');
+        const hackingGame = document.getElementById('hackingGame');
+        const hackingTitle = document.getElementById('hackingTitle');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const hackingProgress = document.getElementById('hackingProgress');
+        const progressText = document.getElementById('progressText');
+        const startHackBtn = document.getElementById('startHackBtn');
+        const boostHackBtn = document.getElementById('boostHackBtn');
+        const completeHackBtn = document.getElementById('completeHackBtn');
+        const closeHacking = document.getElementById('closeHacking');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const scanBtn = document.getElementById('scanBtn');
+        const firewallBtn = document.getElementById('firewallBtn');
+        const decryptBtn = document.getElementById('decryptBtn');
+
+        // Initialize the game
+        function initGame() {
+            // Check if user data exists in localStorage
+            const savedUser = localStorage.getItem('cyberHackUser');
+            if (savedUser) {
+                gameState.username = savedUser;
+                userDisplay.textContent = savedUser;
+                loginScreen.style.display = 'none';
+                addTerminalLine(`Welcome back, ${savedUser}. System ready.`);
+                
+                // Load user data from Firebase (commented out for safety)
+                // loadUserData();
+            } else {
+                loginScreen.style.display = 'flex';
+            }
+            
+            updateStatsDisplay();
+            setupEventListeners();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            loginBtn.addEventListener('click', handleLogin);
+            terminalInput.addEventListener('keydown', handleTerminalInput);
+            missionList.addEventListener('click', handleMissionClick);
+            startHackBtn.addEventListener('click', startHacking);
+            boostHackBtn.addEventListener('click', boostHacking);
+            completeHackBtn.addEventListener('click', completeHacking);
+            closeHacking.addEventListener('click', closeHackingGame);
+            scanBtn.addEventListener('click', () => executeCommand('scan'));
+            firewallBtn.addEventListener('click', () => executeCommand('firewall'));
+            decryptBtn.addEventListener('click', () => executeCommand('decrypt'));
+            
+            // Allow Enter key on username input
+            usernameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+        }
+
+        // Handle user login
+        function handleLogin() {
+            const username = usernameInput.value.trim();
+            if (username) {
+                gameState.username = username;
+                userDisplay.textContent = username;
+                loginScreen.style.display = 'none';
+                addTerminalLine(`Authentication successful. Welcome, ${username}.`);
+                addTerminalLine(`Type 'help' for available commands.`);
+                
+                // Save to localStorage
+                localStorage.setItem('cyberHackUser', username);
+                
+                // Save to Firebase (commented out for safety)
+                // saveUserData();
+            } else {
+                showNotification('Please enter a hacker alias.', 'error');
+            }
+        }
+
+        // Handle terminal input
+        function handleTerminalInput(e) {
+            if (e.key === 'Enter') {
+                const command = terminalInput.value.trim();
+                terminalInput.value = '';
+                
+                if (command) {
+                    addTerminalLine(`<span class="prompt">root@hack-terminal:~$ </span>${command}`);
+                    executeCommand(command);
+                }
+            }
+        }
+
+        // Execute terminal commands
+        function executeCommand(command) {
+            const cmd = command.toLowerCase();
+            
+            switch(cmd) {
+                case 'help':
+                    addTerminalLine('Available commands:');
+                    addTerminalLine('  help - Show this help message');
+                    addTerminalLine('  scan - Scan the network for vulnerabilities');
+                    addTerminalLine('  firewall - Test firewall security');
+                    addTerminalLine('  decrypt - Run decryption algorithm');
+                    addTerminalLine('  missions - List available missions');
+                    addTerminalLine('  status - Show current hacker status');
+                    addTerminalLine('  clear - Clear terminal screen');
+                    break;
+                    
+                case 'scan':
+                    simulateNetworkScan();
+                    break;
+                    
+                case 'firewall':
+                    simulateFirewallTest();
+                    break;
+                    
+                case 'decrypt':
+                    startDecryptionGame();
+                    break;
+                    
+                case 'missions':
+                    listMissions();
+                    break;
+                    
+                case 'status':
+                    showStatus();
+                    break;
+                    
+                case 'clear':
+                    terminalOutput.innerHTML = '';
+                    break;
+                    
+                default:
+                    addTerminalLine(`<span class="error">Command not found: ${command}. Type 'help' for available commands.</span>`);
+            }
+        }
+
+        // Simulate network scan
+        function simulateNetworkScan() {
+            addTerminalLine('Initiating network scan...');
+            
+            setTimeout(() => {
+                addTerminalLine('Scanning IP range 192.168.1.0/24...');
+            }, 800);
+            
+            setTimeout(() => {
+                addTerminalLine('Found 3 active hosts with open ports.');
+            }, 1600);
+            
+            setTimeout(() => {
+                addTerminalLine('Vulnerability assessment: 2 hosts with weak security.');
+                addTerminalLine('Network scan complete.');
+                gameState.skills += 5;
+                updateStatsDisplay();
+            }, 2400);
+        }
+
+        // Simulate firewall test
+        function simulateFirewallTest() {
+            addTerminalLine('Testing firewall security...');
+            
+            setTimeout(() => {
+                addTerminalLine('Firewall type: Next-gen intrusion prevention system');
+            }, 800);
+            
+            setTimeout(() => {
+                addTerminalLine('Security level: HIGH');
+            }, 1600);
+            
+            setTimeout(() => {
+                addTerminalLine('Vulnerabilities detected: 1 (Port 443 - HTTPS)');
+                addTerminalLine('Firewall test complete.');
+                gameState.skills += 3;
+                updateStatsDisplay();
+            }, 2400);
+        }
+
+        // Start decryption mini-game
+        function startDecryptionGame() {
+            hackingTitle.textContent = 'DECRYPTION SEQUENCE';
+            codeDisplay.textContent = generateEncryptedCode();
+            hackingProgress.style.width = '0%';
+            progressText.textContent = '0%';
+            completeHackBtn.disabled = true;
+            
+            hackingGame.style.display = 'flex';
+            gameState.currentMission = 'decryption';
+        }
+
+        // Handle mission click
+        function handleMissionClick(e) {
+            if (e.target.classList.contains('mission-item')) {
+                const missionId = e.target.getAttribute('data-mission');
+                startMission(missionId);
+            }
+        }
+
+        // Start a mission
+        function startMission(missionId) {
+            const missions = {
+                '1': { title: 'Infiltrate Data Fortress', difficulty: 1 },
+                '2': { title: 'Decrypt Security Protocol', difficulty: 2 },
+                '3': { title: 'Bypass Firewall System', difficulty: 3 },
+                '4': { title: 'Access Mainframe', difficulty: 4 },
+                '5': { title: 'Extract Classified Data', difficulty: 5 }
+            };
+            
+            const mission = missions[missionId];
+            if (mission) {
+                hackingTitle.textContent = mission.title;
+                codeDisplay.textContent = generateMissionCode(mission.difficulty);
+                hackingProgress.style.width = '0%';
+                progressText.textContent = '0%';
+                completeHackBtn.disabled = true;
+                
+                hackingGame.style.display = 'flex';
+                gameState.currentMission = missionId;
+                
+                addTerminalLine(`Mission initiated: ${mission.title}`);
+            }
+        }
+
+        // Start hacking process
+        function startHacking() {
+            if (gameState.isHacking) return;
+            
+            gameState.isHacking = true;
+            gameState.hackingProgress = 0;
+            startHackBtn.disabled = true;
+            
+            const hackInterval = setInterval(() => {
+                if (gameState.hackingProgress < 100) {
+                    gameState.hackingProgress += Math.random() * 5;
+                    if (gameState.hackingProgress > 100) gameState.hackingProgress = 100;
+                    
+                    hackingProgress.style.width = `${gameState.hackingProgress}%`;
+                    progressText.textContent = `${Math.floor(gameState.hackingProgress)}%`;
+                    
+                    // Update code display with hacking effects
+                    if (gameState.currentMission === 'decryption') {
+                        codeDisplay.textContent = decryptCode(codeDisplay.textContent, gameState.hackingProgress);
+                    }
+                } else {
+                    clearInterval(hackInterval);
+                    gameState.isHacking = false;
+                    startHackBtn.disabled = false;
+                    completeHackBtn.disabled = false;
+                    showNotification('System compromised!', 'success');
+                }
+            }, 200);
+        }
+
+        // Boost hacking process
+        function boostHacking() {
+            if (gameState.isHacking && gameState.hackingProgress < 100) {
+                gameState.hackingProgress += 15;
+                if (gameState.hackingProgress > 100) gameState.hackingProgress = 100;
+                
+                hackingProgress.style.width = `${gameState.hackingProgress}%`;
+                progressText.textContent = `${Math.floor(gameState.hackingProgress)}%`;
+                
+                if (gameState.hackingProgress >= 100) {
+                    gameState.isHacking = false;
+                    startHackBtn.disabled = false;
+                    completeHackBtn.disabled = false;
+                    showNotification('System compromised!', 'success');
+                }
+            }
+        }
+
+        // Complete hacking mission
+        function completeHacking() {
+            if (gameState.hackingProgress >= 100) {
+                if (gameState.currentMission && gameState.currentMission !== 'decryption') {
+                    const missionItem = document.querySelector(`[data-mission="${gameState.currentMission}"]`);
+                    if (missionItem && !missionItem.classList.contains('completed')) {
+                        missionItem.classList.add('completed');
+                        gameState.completedMissions++;
+                        gameState.reputation += 20;
+                        gameState.skills += 10;
+                        gameState.firewallLevel = Math.min(gameState.firewallLevel + 1, 5);
+                        
+                        addTerminalLine(`<span class="success">Mission completed: ${missionItem.textContent}</span>`);
+                        showNotification('Mission accomplished! Reputation increased.', 'success');
+                    }
+                } else if (gameState.currentMission === 'decryption') {
+                    gameState.skills += 5;
+                    addTerminalLine('<span class="success">Decryption sequence completed.</span>');
+                    showNotification('Decryption successful! Skills increased.', 'success');
+                }
+                
+                updateStatsDisplay();
+                closeHackingGame();
+                
+                // Save progress to Firebase (commented out for safety)
+                // saveUserData();
+            }
+        }
+
+        // Close hacking game
+        function closeHackingGame() {
+            hackingGame.style.display = 'none';
+            gameState.isHacking = false;
+            startHackBtn.disabled = false;
+        }
+
+        // Generate encrypted code for display
+        function generateEncryptedCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            let code = '';
+            
+            for (let i = 0; i < 200; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 40 === 0) code += '\n';
+            }
+            
+            return code;
+        }
+
+        // Generate mission-specific code
+        function generateMissionCode(difficulty) {
+            const baseCode = `// SECURITY PROTOCOL v${difficulty}.0\n// ENCRYPTION: AES-${256 * difficulty}\n// ACCESS LEVEL: ${['LOW', 'MEDIUM', 'HIGH', 'MAXIMUM', 'CRITICAL'][difficulty-1]}\n\n`;
+            const encrypted = generateEncryptedCode();
+            return baseCode + encrypted;
+        }
+
+        // Simulate code decryption
+        function decryptCode(code, progress) {
+            const lines = code.split('\n');
+            const decryptedLines = [];
+            const decryptRatio = progress / 100;
+            
+            for (let line of lines) {
+                let decryptedLine = '';
+                for (let i = 0; i < line.length; i++) {
+                    if (Math.random() < decryptRatio) {
+                        // Replace with decrypted character (simplified)
+                        decryptedLine += line[i];
+                    } else {
+                        // Keep encrypted
+                        decryptedLine += line[i];
+                    }
+                }
+                decryptedLines.push(decryptedLine);
+            }
+            
+            return decryptedLines.join('\n');
+        }
+
+        // List available missions
+        function listMissions() {
+            addTerminalLine('Available missions:');
+            const missions = document.querySelectorAll('.mission-item');
+            missions.forEach((mission, index) => {
+                const status = mission.classList.contains('completed') ? ' [COMPLETED]' : ' [PENDING]';
+                addTerminalLine(`  ${index + 1}. ${mission.textContent}${status}`);
+            });
+        }
+
+        // Show player status
+        function showStatus() {
+            addTerminalLine('Hacker Status:');
+            addTerminalLine(`  Alias: ${gameState.username}`);
+            addTerminalLine(`  Reputation: ${gameState.reputation}`);
+            addTerminalLine(`  Skills: ${gameState.skills}`);
+            addTerminalLine(`  Completed Missions: ${gameState.completedMissions}/5`);
+            addTerminalLine(`  Firewall Level: ${gameState.firewallLevel}`);
+        }
+
+        // Add line to terminal
+        function addTerminalLine(text) {
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = text;
+            terminalOutput.appendChild(line);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        // Update stats display
+        function updateStatsDisplay() {
+            reputationStat.textContent = gameState.reputation;
+            skillsStat.textContent = gameState.skills;
+            missionsStat.textContent = `${gameState.completedMissions}/5`;
+            firewallStat.textContent = gameState.firewallLevel;
+            securityLevel.textContent = gameState.firewallLevel;
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add('show', type);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Save user data to Firebase
+        function saveUserData() {
+            // This would save to Firebase in a real implementation
+            // database.ref('users/' + gameState.username).set(gameState);
+            console.log('User data saved to Firebase:', gameState);
+        }
+
+        // Load user data from Firebase
+        function loadUserData() {
+            // This would load from Firebase in a real implementation
+            // database.ref('users/' + gameState.username).once('value').then((snapshot) => {
+            //     const data = snapshot.val();
+            //     if (data) {
+            //         Object.assign(gameState, data);
+            //         updateStatsDisplay();
+            //         
+            //         // Update completed missions in UI
+            //         for (let i = 1; i <= gameState.completedMissions; i++) {
+            //             const missionItem = document.querySelector(`[data-mission="${i}"]`);
+            //             if (missionItem) missionItem.classList.add('completed');
+            //         }
+            //     }
+            // });
+            console.log('User data loaded from Firebase');
+        }
+
+        // Initialize the game when page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

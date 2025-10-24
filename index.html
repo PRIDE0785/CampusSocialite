@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusSocialite | Connect, Share, Discover</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #564fd8;
+            --secondary: #ff6b8b;
+            --campus-green: #2ecc71;
+            --campus-blue: #3498db;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f5f5f7;
+            --gray: #2a2a2a;
+            --gray-light: #3a3a3a;
+            --success: #4caf50;
+            --error: #f44336;
+            --card-bg: rgba(30, 30, 30, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--campus-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--campus-green);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--campus-green);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--gray);
+            border-radius: 50px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            width: 100%;
+            margin-left: 10px;
+            outline: none;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--campus-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--campus-blue);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray-light);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--campus-green);
+            color: var(--campus-green);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--campus-green), var(--campus-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--campus-green), var(--campus-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: #ccc;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Content Tabs */
+        .content-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: var(--gray);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--campus-green);
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--gray-light);
+        }
+
+        /* Media Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .media-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .media-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(46, 204, 113, 0.3);
+        }
+
+        .media-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .video-thumbnail {
+            position: relative;
+        }
+
+        .video-thumbnail::after {
+            content: '\f04b';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .media-info {
+            padding: 15px;
+        }
+
+        .media-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .media-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .media-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--campus-green), var(--campus-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--gray);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--gray-light);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--campus-green);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--campus-green);
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--gray);
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            color: var(--light);
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--campus-green);
+        }
+
+        /* Auth Tabs */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            border-bottom-color: var(--campus-green);
+            color: var(--campus-green);
+        }
+
+        .auth-form {
+            margin-bottom: 20px;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .auth-footer a {
+            color: var(--campus-green);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--campus-green);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--campus-green);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--gray);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--campus-green);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray);
+            color: #777;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark);
+            border: 1px solid var(--campus-green);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-color: var(--success);
+        }
+
+        .notification.error {
+            border-color: var(--error);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--campus-green);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-media {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 50px 0;
+            }
+            
+            .content-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    CampusSocialite
+                </a>
+                
+                <div class="nav-links">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">Explore</a>
+                    <a href="#">Events</a>
+                    <a href="#">Groups</a>
+                </div>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search posts, people, events...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="btn btn-primary" id="uploadBtn">
+                        <i class="fas fa-plus"></i> Create Post
+                    </button>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar">?</div>
+                        <span>Guest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Connect With Your Campus Community</h1>
+            <p>Share your campus experiences, join student groups, discover events, and connect with fellow students. Your campus life, amplified.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="startUploadBtn">
+                    <i class="fas fa-rocket"></i> Get Started
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-users"></i> Explore Communities
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Content Tabs -->
+        <div class="content-tabs">
+            <div class="tab active" data-filter="all">All Posts</div>
+            <div class="tab" data-filter="images">Photos</div>
+            <div class="tab" data-filter="videos">Videos</div>
+            <div class="tab" data-filter="events">Events</div>
+            <div class="tab" data-filter="announcements">Announcements</div>
+        </div>
+
+        <!-- Media Grid -->
+        <div class="media-grid" id="mediaGrid">
+            <!-- Posts will be loaded here dynamically -->
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="spinner" id="loadingSpinner"></div>
+    </main>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Post</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop your files here</h3>
+                <p>or click to browse (Supports images, videos, documents)</p>
+                <input type="file" id="fileInput" multiple style="display: none;" accept="image/*,video/*,.pdf,.doc,.docx">
+            </div>
+            
+            <div class="form-group">
+                <label for="mediaTitle">Post Title</label>
+                <input type="text" id="mediaTitle" class="form-control" placeholder="What's on your mind?">
+            </div>
+            
+            <div class="form-group">
+                <label for="mediaDescription">Description</label>
+                <textarea id="mediaDescription" class="form-control" rows="3" placeholder="Share your thoughts, ask questions, or describe your post..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="mediaTags">Tags</label>
+                <input type="text" id="mediaTags" class="form-control" placeholder="Add relevant tags (study, sports, events, etc.)">
+            </div>
+            
+            <div class="form-group">
+                <label for="mediaType">Post Type</label>
+                <select id="mediaType" class="form-control">
+                    <option value="image">Photo</option>
+                    <option value="video">Video</option>
+                    <option value="event">Event</option>
+                    <option value="announcement">Announcement</option>
+                    <option value="question">Question</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" id="submitUpload" style="width: 100%;">
+                <i class="fas fa-share"></i> Share Post
+            </button>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authModalTitle">Join CampusSocialite</h2>
+                <button class="close-modal" id="closeAuthModal">&times;</button>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Sign In</div>
+                <div class="auth-tab" data-tab="register">Create Account</div>
+            </div>
+            
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Campus Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="your.email@campus.edu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Your password">
+                </div>
+                
+                <button class="btn btn-primary" id="loginSubmit" style="width: 100%;">
+                    Sign In to CampusSocialite
+                </button>
+            </div>
+            
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-control" placeholder="Your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Campus Email</label>
+                    <input type="email" id="registerEmail" class="form-control" placeholder="your.email@campus.edu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerMajor">Major/Department</label>
+                    <input type="text" id="registerMajor" class="form-control" placeholder="Computer Science, Business, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Minimum 6 characters">
+                </div>
+                
+                <button class="btn btn-secondary" id="registerSubmit" style="width: 100%;">
+                    Create Campus Account
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CampusSocialite</h3>
+                    <p>Connecting students across campuses. Share experiences, join communities, and make your campus life unforgettable.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Students</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Find Study Groups</a></li>
+                        <li><a href="#">Campus Events</a></li>
+                        <li><a href="#">Student Clubs</a></li>
+                        <li><a href="#">Housing & Roommates</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Campus Guidelines</a></li>
+                        <li><a href="#">Safety Resources</a></li>
+                        <li><a href="#">Academic Calendar</a></li>
+                        <li><a href="#">Career Services</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 CampusSocialite. Connecting campus communities worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div id="notificationText">Welcome to CampusSocialite!</div>
+    </div>
+
+    <script>
+        // =============================================
+        // FIREBASE CONFIGURATION
+        // =============================================
+        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+          const firebaseConfig = {
+    apiKey: "AIzaSyDLGkWJcWn_YCWh5_aMnU8S1wjgGVmenSI",
+    authDomain: "campussocialite-1a608.firebaseapp.com",
+    projectId: "campussocialite-1a608",
+    storageBucket: "campussocialite-1a608.firebasestorage.app",
+    messagingSenderId: "225404911299",
+    appId: "1:225404911299:web:44aeacd878522c33c26c76",
+    measurementId: "G-5RFF1YGCWH"
+  };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // =============================================
+        // APPLICATION STATE
+        // =============================================
+        const appState = {
+            currentUser: null,
+            currentFilter: 'all',
+            media: [],
+            isUploading: false
+        };
+
+        // =============================================
+        // DOM ELEMENTS
+        // =============================================
+        const uploadBtn = document.getElementById('uploadBtn');
+        const startUploadBtn = document.getElementById('startUploadBtn');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeModal = document.querySelector('.close-modal');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const submitUpload = document.getElementById('submitUpload');
+        const mediaGrid = document.getElementById('mediaGrid');
+        const tabs = document.querySelectorAll('.tab');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const authModal = document.getElementById('authModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const loginSubmit = document.getElementById('loginSubmit');
+        const registerSubmit = document.getElementById('registerSubmit');
+        const userProfile = document.getElementById('userProfile');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        function initApp() {
+            setupEventListeners();
+            setupAuthStateListener();
+            loadMedia();
+        }
+
+        // =============================================
+        // AUTHENTICATION SYSTEM
+        // =============================================
+        function setupAuthStateListener() {
+            auth.onAuthStateChanged(user => {
+                appState.currentUser = user;
+                if (user) {
+                    updateUIForUser(user);
+                    showNotification(`Welcome back, ${user.displayName || user.email}!`, 'success');
+                } else {
+                    updateUIForGuest();
+                }
+            });
+        }
+
+        async function signUp(email, password, displayName, major) {
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await userCredential.user.updateProfile({
+                    displayName: displayName
+                });
+                
+                // Create user document in Firestore
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    displayName: displayName,
+                    email: email,
+                    major: major,
+                    joinDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    avatarUrl: '',
+                    bio: '',
+                    campusStats: {
+                        posts: 0,
+                        likes: 0,
+                        joinedGroups: 0
+                    }
+                });
+                
+                return userCredential;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        async function signIn(email, password) {
+            try {
+                return await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        async function signOut() {
+            try {
+                await auth.signOut();
+                showNotification('Signed out successfully', 'success');
+            } catch (error) {
+                showNotification('Error signing out: ' + error.message, 'error');
+            }
+        }
+
+        // =============================================
+        // MEDIA MANAGEMENT
+        // =============================================
+        async function loadMedia(filter = 'all') {
+            loadingSpinner.style.display = 'block';
+            appState.currentFilter = filter;
+            
+            try {
+                let query = db.collection('posts').orderBy('timestamp', 'desc').limit(20);
+                
+                if (filter !== 'all') {
+                    query = query.where('type', '==', filter);
+                }
+                
+                const snapshot = await query.get();
+                appState.media = [];
+                
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    post.id = doc.id;
+                    appState.media.push(post);
+                });
+                
+                displayMedia(appState.media);
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                showNotification('Error loading posts', 'error');
+                // Fallback to sample data
+                displayMedia(getSamplePosts().filter(post => 
+                    filter === 'all' || post.type === filter
+                ));
+            }
+        }
+
+        function displayMedia(mediaArray) {
+            mediaGrid.innerHTML = '';
+            
+            if (mediaArray.length === 0) {
+                mediaGrid.innerHTML = `
+                    <div class="no-media">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>No posts yet</h3>
+                        <p>Be the first to share something with your campus community!</p>
+                    </div>
+                `;
+                loadingSpinner.style.display = 'none';
+                return;
+            }
+            
+            mediaArray.forEach(post => {
+                const mediaCard = document.createElement('div');
+                mediaCard.className = 'media-card fade-in';
+                mediaCard.dataset.id = post.id;
+                
+                const thumbnailClass = post.type === 'video' ? 'media-thumbnail video-thumbnail' : 'media-thumbnail';
+                const timestamp = formatTimestamp(post.timestamp);
+                const avatarText = post.authorName ? post.authorName.charAt(0).toUpperCase() : 'U';
+                
+                mediaCard.innerHTML = `
+                    ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${post.title}" class="${thumbnailClass}">` : ''}
+                    <div class="media-info">
+                        <h3 class="media-title">${post.title}</h3>
+                        <p style="color: #ccc; margin-bottom: 10px; font-size: 0.9rem;">${post.description || ''}</p>
+                        <div class="media-meta">
+                            <span><i class="fas fa-heart"></i> ${post.likes || 0}</span>
+                            <span><i class="fas fa-comment"></i> ${post.comments || 0}</span>
+                            <span><i class="fas fa-share"></i> ${post.shares || 0}</span>
+                        </div>
+                        <div class="media-author">
+                            <div class="author-avatar">${avatarText}</div>
+                            <div>
+                                <div style="font-weight: 500;">${post.authorName || 'Unknown User'}</div>
+                                <div style="font-size: 0.8rem; color: #aaa;">${timestamp}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                mediaGrid.appendChild(mediaCard);
+            });
+            
+            loadingSpinner.style.display = 'none';
+        }
+
+        async function handleUpload() {
+            if (!appState.currentUser) {
+                showNotification('Please sign in to create posts', 'error');
+                authModal.style.display = 'flex';
+                return;
+            }
+            
+            const title = document.getElementById('mediaTitle').value;
+            const description = document.getElementById('mediaDescription').value;
+            const tags = document.getElementById('mediaTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const type = document.getElementById('mediaType').value;
+            const files = fileInput.files;
+            
+            if (!title.trim()) {
+                showNotification('Please add a title for your post', 'error');
+                return;
+            }
+            
+            submitUpload.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+            submitUpload.disabled = true;
+            appState.isUploading = true;
+            
+            try {
+                let imageUrl = '';
+                
+                // Upload file if selected
+                if (files.length > 0) {
+                    const file = files[0];
+                    const fileName = `posts/${appState.currentUser.uid}/${Date.now()}_${file.name}`;
+                    const fileRef = storage.ref().child(fileName);
+                    const uploadTask = fileRef.put(file);
+                    
+                    await uploadTask;
+                    imageUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                }
+                
+                // Create post document
+                const postData = {
+                    title: title,
+                    description: description,
+                    type: type,
+                    authorId: appState.currentUser.uid,
+                    authorName: appState.currentUser.displayName || appState.currentUser.email,
+                    imageUrl: imageUrl,
+                    tags: tags,
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'published',
+                    campus: 'General'
+                };
+                
+                await db.collection('posts').add(postData);
+                
+                showNotification('Post published successfully!', 'success');
+                closeUploadModal();
+                loadMedia(appState.currentFilter);
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification('Error publishing post: ' + error.message, 'error');
+            } finally {
+                submitUpload.innerHTML = '<i class="fas fa-share"></i> Share Post';
+                submitUpload.disabled = false;
+                appState.isUploading = false;
+            }
+        }
+
+        // =============================================
+        // UI MANAGEMENT
+        // =============================================
+        function updateUIForUser(user) {
+            const avatar = userProfile.querySelector('.avatar');
+            const nameSpan = userProfile.querySelector('span');
+            
+            avatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+            nameSpan.textContent = user.displayName || 'User';
+            
+            uploadBtn.style.display = 'block';
+            uploadBtn.innerHTML = '<i class="fas fa-plus"></i> Create Post';
+            
+            // Add sign out option
+            userProfile.onclick = () => {
+                if (confirm('Are you sure you want to sign out?')) {
+                    signOut();
+                }
+            };
+        }
+
+        function updateUIForGuest() {
+            const avatar = userProfile.querySelector('.avatar');
+            const nameSpan = userProfile.querySelector('span');
+            
+            avatar.textContent = '?';
+            nameSpan.textContent = 'Guest';
+            
+            uploadBtn.style.display = 'block';
+            uploadBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            
+            userProfile.onclick = () => {
+                authModal.style.display = 'flex';
+            };
+        }
+
+        function openUploadModal() {
+            if (!appState.currentUser) {
+                authModal.style.display = 'flex';
+                return;
+            }
+            uploadModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeUploadModal() {
+            uploadModal.style.display = 'none';
+            authModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetUploadForm();
+        }
+
+        function resetUploadForm() {
+            document.getElementById('mediaTitle').value = '';
+            document.getElementById('mediaDescription').value = '';
+            document.getElementById('mediaTags').value = '';
+            fileInput.value = '';
+            uploadArea.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop your files here</h3>
+                <p>or click to browse (Supports images, videos, documents)</p>
+            `;
+        }
+
+        function showNotification(message, type = 'success') {
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add('show', type);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // =============================================
+        // EVENT LISTENERS
+        // =============================================
+        function setupEventListeners() {
+            // Upload modal
+            uploadBtn.addEventListener('click', openUploadModal);
+            startUploadBtn.addEventListener('click', openUploadModal);
+            closeModal.addEventListener('click', closeUploadModal);
+            
+            // File upload
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--campus-green)';
+                uploadArea.style.background = 'rgba(46, 204, 113, 0.1)';
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = 'var(--gray-light)';
+                uploadArea.style.background = 'transparent';
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileInput.files = e.dataTransfer.files;
+                uploadArea.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <h3>${e.dataTransfer.files.length} file(s) selected</h3>
+                    <p>Ready to upload</p>
+                `;
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    uploadArea.innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <h3>${e.target.files.length} file(s) selected</h3>
+                        <p>Ready to upload</p>
+                    `;
+                }
+            });
+            
+            // Form submission
+            submitUpload.addEventListener('click', handleUpload);
+            
+            // Tabs
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    loadMedia(tab.dataset.filter);
+                });
+            });
+            
+            // Auth modal
+            closeAuthModal.addEventListener('click', closeUploadModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === uploadModal || e.target === authModal) {
+                    closeUploadModal();
+                }
+            });
+            
+            // Auth tabs
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    document.getElementById('loginForm').style.display = tabName === 'login' ? 'block' : 'none';
+                    document.getElementById('registerForm').style.display = tabName === 'register' ? 'block' : 'none';
+                    document.getElementById('authModalTitle').textContent = tabName === 'login' ? 'Sign In to CampusSocialite' : 'Join CampusSocialite';
+                });
+            });
+            
+            // Auth form submission
+            loginSubmit.addEventListener('click', async () => {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showNotification('Please enter both email and password', 'error');
+                    return;
+                }
+                
+                loginSubmit.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+                loginSubmit.disabled = true;
+                
+                try {
+                    await signIn(email, password);
+                    authModal.style.display = 'none';
+                } catch (error) {
+                    showNotification('Sign in failed: ' + error.message, 'error');
+                }
+                
+                loginSubmit.innerHTML = 'Sign In to CampusSocialite';
+                loginSubmit.disabled = false;
+            });
+            
+            registerSubmit.addEventListener('click', async () => {
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const major = document.getElementById('registerMajor').value;
+                const password = document.getElementById('registerPassword').value;
+                
+                if (!name || !email || !password) {
+                    showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showNotification('Password must be at least 6 characters', 'error');
+                    return;
+                }
+                
+                registerSubmit.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+                registerSubmit.disabled = true;
+                
+                try {
+                    await signUp(email, password, name, major);
+                    authModal.style.display = 'none';
+                } catch (error) {
+                    showNotification('Registration failed: ' + error.message, 'error');
+                }
+                
+                registerSubmit.innerHTML = 'Create Campus Account';
+                registerSubmit.disabled = false;
+            });
+        }
+
+        // =============================================
+        // UTILITY FUNCTIONS
+        // =============================================
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'Recently';
+            
+            try {
+                const date = timestamp.toDate();
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffMins < 1) return 'Just now';
+                if (diffMins < 60) return `${diffMins}m ago`;
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays < 7) return `${diffDays}d ago`;
+                
+                return date.toLocaleDateString();
+            } catch (error) {
+                return 'Recently';
+            }
+        }
+
+        function getSamplePosts() {
+            return [
+                {
+                    id: 1,
+                    title: "Campus Sunset Views 🌅",
+                    description: "Beautiful evening at the university campus. Perfect weather for studying outside!",
+                    type: "image",
+                    authorName: "Alex Johnson",
+                    likes: 24,
+                    comments: 5,
+                    shares: 2,
+                    timestamp: { toDate: () => new Date(Date.now() - 2 * 60 * 60 * 1000) },
+                    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                },
+                {
+                    id: 2,
+                    title: "Study Group Forming for CS101",
+                    description: "Looking for 3-4 people to form a study group for the upcoming midterms. Meet twice a week at the library.",
+                    type: "announcement",
+                    authorName: "Sarah Chen",
+                    likes: 15,
+                    comments: 8,
+                    shares: 3,
+                    timestamp: { toDate: () => new Date(Date.now() - 5 * 60 * 60 * 1000) }
+                },
+                {
+                    id: 3,
+                    title: "Basketball Tournament This Friday!",
+                    description: "Intramural basketball tournament at the campus gym. Sign up by Thursday! Free pizza for participants.",
+                    type: "event",
+                    authorName: "Campus Sports",
+                    likes: 42,
+                    comments: 12,
+                    shares: 15,
+                    timestamp: { toDate: () => new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+                    imageUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                }
+            ];
+        }
+
+        // =============================================
+        // INITIALIZE APP
+        // =============================================
+        window.addEventListener('load', initApp);
+    </script>
+</body>
+</html>
