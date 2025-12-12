@@ -3,355 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusSocialite | Connect, Share, Discover</title>
+    <title>CNMediaHub | Movies, Music & Action</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
         :root {
-            --primary: #6c63ff;
-            --primary-dark: #564fd8;
-            --secondary: #ff6b8b;
-            --campus-green: #2ecc71;
-            --campus-blue: #3498db;
-            --dark: #121212;
-            --darker: #0a0a0a;
-            --light: #f5f5f7;
-            --gray: #2a2a2a;
-            --gray-light: #3a3a3a;
-            --success: #4caf50;
-            --error: #f44336;
-            --card-bg: rgba(30, 30, 30, 0.7);
-            --card-border: rgba(255, 255, 255, 0.1);
+            /* MTN Pulse Orange Palette */
+            --pulse-orange: #FF6A00;
+            --pulse-orange-light: #FF7A00;
+            --pulse-orange-dark: #E55C00;
+            --pulse-black: #000000;
+            --pulse-dark: #1A1A1A;
+            --pulse-gray: #333333;
+            --pulse-light: #F5F5F5;
+            --pulse-accent: #00B0FF;
+            --pulse-secondary: #25D366; /* WhatsApp Green */
+            --pulse-bg: #0F0F0F;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--dark);
-            color: var(--light);
+            background-color: var(--pulse-bg);
+            color: var(--pulse-light);
             line-height: 1.6;
             overflow-x: hidden;
         }
-
+        
         .container {
-            max-width: 1400px;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
-        /* Header Styles */
+        
+        /* Header & Navigation */
         header {
-            background-color: rgba(18, 18, 18, 0.9);
-            backdrop-filter: blur(10px);
+            background-color: var(--pulse-black);
+            padding: 15px 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--gray);
+            z-index: 1000;
+            border-bottom: 3px solid var(--pulse-orange);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.1);
         }
-
-        .header-content {
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--pulse-orange);
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
         }
-
-        .logo {
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            color: var(--pulse-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 17px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--light);
-            text-decoration: none;
-        }
-
-        .logo i {
-            color: var(--campus-green);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            padding: 8px 0;
             position: relative;
         }
-
-        .nav-links a:hover {
-            color: var(--campus-green);
+        
+        nav ul li a i {
+            margin-right: 8px;
         }
-
-        .nav-links a.active::after {
+        
+        nav ul li a:hover {
+            color: var(--pulse-orange);
+        }
+        
+        nav ul li a:hover:after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 2px;
-            background-color: var(--campus-green);
+            height: 3px;
+            background-color: var(--pulse-orange);
+            border-radius: 3px;
         }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--gray);
-            border-radius: 50px;
-            padding: 8px 15px;
-            width: 300px;
+        
+        .active {
+            color: var(--pulse-orange) !important;
         }
-
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: var(--light);
+        
+        .active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            margin-left: 10px;
-            outline: none;
+            height: 3px;
+            background-color: var(--pulse-orange);
+            border-radius: 3px;
         }
-
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
             border: none;
-            outline: none;
-        }
-
-        .btn-primary {
-            background: var(--campus-green);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--campus-blue);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--light);
-            border: 1px solid var(--gray-light);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--campus-green);
-            color: var(--campus-green);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--pulse-orange);
+            font-size: 24px;
             cursor: pointer;
         }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--campus-green), var(--campus-blue));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
-
+        
         /* Hero Section */
         .hero {
-            padding: 80px 0;
+            background: linear-gradient(rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.9)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1925&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
             text-align: center;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            border-bottom: 5px solid var(--pulse-orange);
             position: relative;
             overflow: hidden;
         }
-
-        .hero::before {
+        
+        .hero:before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at center, rgba(255, 106, 0, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
-
+        
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 48px;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--campus-green), var(--campus-blue));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: var(--pulse-orange);
+            text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
         }
-
+        
         .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
+            font-size: 20px;
+            max-width: 800px;
             margin: 0 auto 30px;
-            color: #ccc;
+            color: #ddd;
         }
-
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        /* Content Tabs */
-        .content-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 12px 25px;
-            background: var(--gray);
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            color: var(--pulse-black);
+            padding: 15px 40px;
             border-radius: 50px;
-            cursor: pointer;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 10px;
             transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .tab.active {
-            background: var(--campus-green);
-        }
-
-        .tab:hover:not(.active) {
-            background: var(--gray-light);
-        }
-
-        /* Media Grid */
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 20px 0;
-        }
-
-        .media-card {
-            background: var(--card-bg);
-            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
+            position: relative;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(10px);
         }
-
-        .media-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(46, 204, 113, 0.3);
-        }
-
-        .media-thumbnail {
+        
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
         }
-
-        .video-thumbnail {
+        
+        .cta-button:hover:before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 106, 0, 0.4);
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--pulse-orange);
+            border: 2px solid var(--pulse-orange);
+        }
+        
+        .cta-button.secondary:hover {
+            background: var(--pulse-orange);
+            color: var(--pulse-black);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
             position: relative;
         }
-
-        .video-thumbnail::after {
-            content: '\f04b';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--pulse-orange);
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .content-card {
+            background-color: var(--pulse-gray);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-bottom: 4px solid var(--pulse-orange);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .content-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 106, 0, 0.2);
+        }
+        
+        .card-image {
+            height: 200px;
+            width: 100%;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-image img, .card-image video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-image:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+        
+        .card-image h3 {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            z-index: 2;
+            color: white;
+            font-size: 22px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        .play-btn {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            width: 50px;
-            height: 50px;
+            background-color: rgba(255, 106, 0, 0.8);
             border-radius: 50%;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2;
         }
-
-        .media-info {
-            padding: 15px;
+        
+        .content-card:hover .play-btn {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
         }
-
-        .media-title {
-            font-size: 1.1rem;
+        
+        .play-btn i {
+            color: var(--pulse-black);
+            font-size: 24px;
+            margin-left: 5px;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .card-content h4 {
+            font-size: 22px;
             margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            color: var(--pulse-orange);
         }
-
-        .media-meta {
+        
+        .card-content p {
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #ccc;
+        }
+        
+        .card-actions {
             display: flex;
             justify-content: space-between;
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
-
-        .media-author {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
         }
-
-        .author-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--campus-green), var(--campus-blue));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
+        
+        .btn-preview {
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            color: var(--pulse-black);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-preview:hover {
+            background: linear-gradient(90deg, var(--pulse-orange-light) 0%, var(--pulse-orange) 100%);
+            box-shadow: 0 5px 10px rgba(255, 106, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-whatsapp {
+            background-color: #25D366;
             color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
-
-        /* Modals */
+        
+        .btn-whatsapp:hover {
+            background-color: #1da851;
+            box-shadow: 0 5px 10px rgba(37, 211, 102, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Modal for video preview */
         .modal {
             display: none;
             position: fixed;
@@ -359,489 +417,701 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
             justify-content: center;
+            align-items: center;
         }
-
+        
         .modal-content {
-            background: var(--dark);
-            border-radius: 15px;
             width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--gray);
-            max-height: 90vh;
-            overflow-y: auto;
+            max-width: 900px;
+            background-color: var(--pulse-dark);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid var(--pulse-orange);
         }
-
+        
         .modal-header {
+            padding: 15px 20px;
+            background-color: var(--pulse-black);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            border-bottom: 2px solid var(--pulse-orange);
         }
-
+        
+        .modal-header h3 {
+            color: var(--pulse-orange);
+        }
+        
         .close-modal {
             background: none;
             border: none;
-            color: var(--light);
-            font-size: 1.5rem;
+            color: var(--pulse-light);
+            font-size: 24px;
             cursor: pointer;
+            transition: color 0.3s;
         }
-
-        /* Upload Area */
-        .upload-area {
-            border: 2px dashed var(--gray-light);
-            border-radius: 10px;
-            padding: 40px 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            cursor: pointer;
+        
+        .close-modal:hover {
+            color: var(--pulse-orange);
         }
-
-        .upload-area:hover {
-            border-color: var(--campus-green);
+        
+        .modal-body {
+            padding: 20px;
         }
-
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--campus-green);
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-control {
+        
+        .video-container {
             width: 100%;
-            padding: 12px 15px;
-            background: var(--gray);
-            border: 1px solid var(--gray-light);
-            border-radius: 8px;
-            color: var(--light);
-            outline: none;
-            transition: border 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: var(--campus-green);
-        }
-
-        /* Auth Tabs */
-        .auth-tabs {
-            display: flex;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--gray);
         }
-
-        .auth-tab {
-            padding: 10px 20px;
+        
+        /* Games Section */
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .game-card {
+            background-color: var(--pulse-gray);
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 5px solid var(--pulse-orange);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--pulse-orange);
+        }
+        
+        .game-card p {
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        /* Quiz Game */
+        .quiz-container {
+            background-color: var(--pulse-dark);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #444;
+        }
+        
+        .quiz-question {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--pulse-orange);
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-option {
+            background-color: #444;
+            padding: 12px 15px;
+            border-radius: 5px;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
             transition: all 0.3s;
         }
-
-        .auth-tab.active {
-            border-bottom-color: var(--campus-green);
-            color: var(--campus-green);
+        
+        .quiz-option:hover {
+            background-color: #555;
+            transform: translateX(5px);
         }
-
-        .auth-form {
+        
+        .quiz-option.selected {
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
+            transform: translateX(10px);
+        }
+        
+        .quiz-result {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            color: var(--pulse-black);
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+            font-weight: bold;
+        }
+        
+        /* Music Guess Game */
+        .music-game-container {
+            background-color: var(--pulse-dark);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #444;
+        }
+        
+        .audio-player-container {
             margin-bottom: 20px;
         }
-
-        .auth-footer {
+        
+        .game-audio-player {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .music-game-info {
             text-align: center;
+            margin-bottom: 15px;
+            color: var(--pulse-orange);
+            font-weight: 600;
+        }
+        
+        .music-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 576px) {
+            .music-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .music-option {
+            background-color: #444;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .music-option:hover {
+            background-color: #555;
+            transform: translateY(-3px);
+        }
+        
+        .music-option.selected {
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
+            transform: translateY(-3px);
+        }
+        
+        .music-game-result {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            color: var(--pulse-black);
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+            font-weight: bold;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
             margin-top: 20px;
-            font-size: 0.9rem;
-            color: #aaa;
         }
-
-        .auth-footer a {
-            color: var(--campus-green);
+        
+        /* Order Section */
+        .order-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
         }
-
+        
+        .order-info {
+            background-color: var(--pulse-gray);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-top: 4px solid var(--pulse-orange);
+        }
+        
+        .order-info h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--pulse-orange);
+        }
+        
+        .order-info p {
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .order-info ul {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .order-info ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #555;
+            display: flex;
+            align-items: center;
+            color: #ddd;
+        }
+        
+        .order-info ul li i {
+            color: var(--pulse-orange);
+            margin-right: 10px;
+        }
+        
+        .whatsapp-order {
+            background-color: #25D366;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-order:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .whatsapp-order i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
         /* Footer */
         footer {
-            background: var(--darker);
-            padding: 60px 0 30px;
-            margin-top: 80px;
+            background-color: var(--pulse-black);
+            padding: 50px 0 20px;
+            border-top: 3px solid var(--pulse-orange);
         }
-
+        
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
+            margin-bottom: 40px;
         }
-
+        
         .footer-column h3 {
+            font-size: 22px;
             margin-bottom: 20px;
-            font-size: 1.2rem;
-            color: var(--campus-green);
+            color: var(--pulse-orange);
         }
-
+        
+        .footer-column p {
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
         .footer-links {
             list-style: none;
         }
-
+        
         .footer-links li {
             margin-bottom: 10px;
         }
-
+        
         .footer-links a {
-            color: #aaa;
+            color: #ccc;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s;
         }
-
+        
         .footer-links a:hover {
-            color: var(--campus-green);
+            color: var(--pulse-orange);
+            padding-left: 5px;
         }
-
-        .social-links {
+        
+        .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-
-        .social-links a {
-            display: flex;
+        
+        .social-icons a {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 40px;
             height: 40px;
-            background: var(--gray);
+            background-color: var(--pulse-gray);
             border-radius: 50%;
-            color: var(--light);
+            color: var(--pulse-orange);
+            font-size: 18px;
             transition: all 0.3s;
         }
-
-        .social-links a:hover {
-            background: var(--campus-green);
-            transform: translateY(-3px);
+        
+        .social-icons a:hover {
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
+            transform: translateY(-5px);
         }
-
+        
         .copyright {
             text-align: center;
-            margin-top: 50px;
             padding-top: 20px;
-            border-top: 1px solid var(--gray);
-            color: #777;
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--dark);
-            border: 1px solid var(--campus-green);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: translateX(150%);
-            transition: transform 0.3s;
-            z-index: 1001;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            border-color: var(--success);
-        }
-
-        .notification.error {
-            border-color: var(--error);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 3px solid var(--campus-green);
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .no-media {
-            text-align: center;
-            padding: 40px;
+            border-top: 1px solid #444;
             color: #aaa;
-            font-size: 1.1rem;
-            grid-column: 1 / -1;
+            font-size: 14px;
         }
-
+        
         /* Responsive Design */
         @media (max-width: 992px) {
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .search-bar {
-                width: 200px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-wrap: wrap;
-            }
-            
-            .nav-links {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                margin-top: 15px;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .media-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 576px) {
-            .footer-content {
+            .order-container {
                 grid-template-columns: 1fr;
             }
             
-            .hero {
-                padding: 50px 0;
-            }
-            
-            .content-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .modal-content {
-                padding: 20px;
+            .hero h1 {
+                font-size: 38px;
             }
         }
-
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--pulse-black);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                transform: translateY(-100%);
                 opacity: 0;
-                transform: translateY(20px);
+                transition: all 0.3s;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+                z-index: 999;
+                border-top: 2px solid var(--pulse-orange);
             }
-            to {
-                opacity: 1;
+            
+            nav ul.active {
                 transform: translateY(0);
+                opacity: 1;
+            }
+            
+            nav ul li {
+                margin: 15px 0;
+            }
+            
+            .hero {
+                padding: 80px 0;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .section-title h2 {
+                font-size: 30px;
+            }
+            
+            section {
+                padding: 60px 0;
             }
         }
-
-        .fade-in {
-            animation: fadeInUp 0.5s ease-out;
+        
+        @media (max-width: 576px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .games-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Pulse effect for special elements */
+        .pulse-effect {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(255, 106, 0, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 106, 0, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 106, 0, 0.5); }
+        }
+        
+        /* Orange gradient text */
+        .orange-gradient-text {
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Download links styling */
+        .download-links {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+        }
+        
+        .download-links h5 {
+            color: var(--pulse-orange);
+            margin-bottom: 10px;
+        }
+        
+        .download-link {
+            display: block;
+            background-color: #444;
+            color: var(--pulse-light);
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            border-left: 3px solid var(--pulse-orange);
+        }
+        
+        .download-link:hover {
+            background-color: #555;
+            transform: translateX(5px);
+            color: var(--pulse-orange);
+        }
+        
+        .download-link i {
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#" class="logo">
-                    <i class="fas fa-graduation-cap"></i>
-                    CampusSocialite
-                </a>
-                
-                <div class="nav-links">
-                    <a href="#" class="active">Home</a>
-                    <a href="#">Explore</a>
-                    <a href="#">Events</a>
-                    <a href="#">Groups</a>
-                </div>
-                
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search posts, people, events...">
-                </div>
-                
-                <div class="user-actions">
-                    <button class="btn btn-primary" id="uploadBtn">
-                        <i class="fas fa-plus"></i> Create Post
-                    </button>
-                    <div class="user-profile" id="userProfile">
-                        <div class="avatar">?</div>
-                        <span>Guest</span>
-                    </div>
-                </div>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                CNMediaHub
             </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="mainNav">
+                    <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#movies"><i class="fas fa-film"></i> Movies</a></li>
+                    <li><a href="#music"><i class="fas fa-music"></i> Music</a></li>
+                    <li><a href="#action"><i class="fas fa-fire"></i> Action</a></li>
+                    <li><a href="#games"><i class="fas fa-gamepad"></i> Games</a></li>
+                    <li><a href="#order"><i class="fas fa-shopping-cart"></i> Order</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="container">
-            <h1>Connect With Your Campus Community</h1>
-            <p>Share your campus experiences, join student groups, discover events, and connect with fellow students. Your campus life, amplified.</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary" id="startUploadBtn">
-                    <i class="fas fa-rocket"></i> Get Started
-                </button>
-                <button class="btn btn-outline">
-                    <i class="fas fa-users"></i> Explore Communities
-                </button>
+            <h1>Welcome to <span class="orange-gradient-text">CNMediaHub</span> Entertainment</h1>
+            <p>Your ultimate destination for movies, music, and action-packed content. Watch previews, download full content, and test your knowledge with interactive games!</p>
+            <a href="#movies" class="cta-button pulse-effect">Explore Movies</a>
+            <a href="#games" class="cta-button secondary">Play Games</a>
+        </div>
+    </section>
+
+    <!-- Movies Section -->
+    <section id="movies">
+        <div class="container">
+            <div class="section-title">
+                <h2>Latest Movies</h2>
+            </div>
+            
+            <div class="content-grid" id="moviesGrid">
+                <!-- Movie cards will be generated by JavaScript -->
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="container">
-        <!-- Content Tabs -->
-        <div class="content-tabs">
-            <div class="tab active" data-filter="all">All Posts</div>
-            <div class="tab" data-filter="images">Photos</div>
-            <div class="tab" data-filter="videos">Videos</div>
-            <div class="tab" data-filter="events">Events</div>
-            <div class="tab" data-filter="announcements">Announcements</div>
+    <!-- Music Section -->
+    <section id="music" style="background-color: #111;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Hot Music</h2>
+            </div>
+            
+            <div class="content-grid" id="musicGrid">
+                <!-- Music cards will be generated by JavaScript -->
+            </div>
         </div>
+    </section>
 
-        <!-- Media Grid -->
-        <div class="media-grid" id="mediaGrid">
-            <!-- Posts will be loaded here dynamically -->
+    <!-- Action Section -->
+    <section id="action">
+        <div class="container">
+            <div class="section-title">
+                <h2>Action Content</h2>
+            </div>
+            
+            <div class="content-grid" id="actionGrid">
+                <!-- Action cards will be generated by JavaScript -->
+            </div>
         </div>
+    </section>
 
-        <!-- Loading Spinner -->
-        <div class="spinner" id="loadingSpinner"></div>
-    </main>
+    <!-- Games Section -->
+    <section id="games" style="background-color: #111;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Entertainment Games</h2>
+            </div>
+            
+            <div class="games-container">
+                <div class="game-card">
+                    <h3>Movie Trivia Challenge</h3>
+                    <p>Test your knowledge of movies with this fun trivia game. Answer 5 questions and see how much of a movie buff you are!</p>
+                    
+                    <div class="quiz-container">
+                        <div class="quiz-question" id="quizQuestion">Question will appear here</div>
+                        
+                        <div class="quiz-options" id="quizOptions">
+                            <!-- Options will be generated by JavaScript -->
+                        </div>
+                        
+                        <div class="game-controls">
+                            <div id="quizProgress">Question 1 of 5</div>
+                            <button class="btn btn-preview" id="nextQuestionBtn">Next Question</button>
+                        </div>
+                        
+                        <div class="quiz-result" id="quizResult">
+                            <!-- Result will be shown here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <h3>Music Guess Game</h3>
+                    <p>Listen to the preview and guess the song title or artist. You have 3 tracks to guess!</p>
+                    
+                    <div class="music-game-container">
+                        <div class="music-game-info" id="musicGameInfo">Track 1 of 3</div>
+                        
+                        <div class="audio-player-container">
+                            <audio class="game-audio-player" id="musicGameAudio" controls>
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        
+                        <div class="music-options" id="musicOptions">
+                            <!-- Options will be generated by JavaScript -->
+                        </div>
+                        
+                        <div class="game-controls">
+                            <div id="musicGameScore">Score: 0/3</div>
+                            <button class="btn btn-preview" id="nextMusicTrackBtn">Next Track</button>
+                        </div>
+                        
+                        <div class="music-game-result" id="musicGameResult">
+                            <!-- Result will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Upload Modal -->
-    <div class="modal" id="uploadModal">
+    <!-- Order Section -->
+    <section id="order">
+        <div class="container">
+            <div class="section-title">
+                <h2>Order Content via WhatsApp</h2>
+            </div>
+            
+            <div class="order-container">
+                <div class="order-info">
+                    <h3>How to Order</h3>
+                    <p>Get full access to any movie, song, or action content by ordering through WhatsApp. We'll send you the download link immediately!</p>
+                    
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Browse our collection</li>
+                        <li><i class="fas fa-check-circle"></i> Click the WhatsApp button on any item</li>
+                        <li><i class="fas fa-check-circle"></i> Send your request via WhatsApp</li>
+                        <li><i class="fas fa-check-circle"></i> Receive download link instantly</li>
+                        <li><i class="fas fa-check-circle"></i> Enjoy your content offline</li>
+                    </ul>
+                    
+                    <a href="https://wa.me/2348123456789?text=Hi%20PulseHub%2C%20I%20want%20to%20order%20content%20from%20your%20site" class="whatsapp-order" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Order Now via WhatsApp
+                    </a>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="font-size: 120px; color: var(--pulse-orange); margin-bottom: 20px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3 style="color: var(--pulse-orange); margin-bottom: 15px;">Fast & Easy Ordering</h3>
+                    <p>We're available 24/7 to process your orders. Get any content delivered to you within minutes!</p>
+                    <p style="margin-top: 20px; font-size: 14px; color: #aaa;">Phone: +234 812 345 6789</p>
+                    <div style="margin-top: 30px; padding: 15px; background-color: var(--pulse-gray); border-radius: 10px; border-left: 4px solid var(--pulse-orange);">
+                        <h4 style="color: var(--pulse-orange); margin-bottom: 10px;">Special Offer</h4>
+                        <p style="color: #ddd; font-size: 14px;">First-time users get 20% off on any 3 items ordered!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Preview Modal -->
+    <div class="modal" id="videoModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Create New Post</h2>
-                <button class="close-modal">&times;</button>
+                <h3 id="modalTitle">Video Preview</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
             </div>
-            
-            <div class="upload-area" id="uploadArea">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Drag & Drop your files here</h3>
-                <p>or click to browse (Supports images, videos, documents)</p>
-                <input type="file" id="fileInput" multiple style="display: none;" accept="image/*,video/*,.pdf,.doc,.docx">
-            </div>
-            
-            <div class="form-group">
-                <label for="mediaTitle">Post Title</label>
-                <input type="text" id="mediaTitle" class="form-control" placeholder="What's on your mind?">
-            </div>
-            
-            <div class="form-group">
-                <label for="mediaDescription">Description</label>
-                <textarea id="mediaDescription" class="form-control" rows="3" placeholder="Share your thoughts, ask questions, or describe your post..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="mediaTags">Tags</label>
-                <input type="text" id="mediaTags" class="form-control" placeholder="Add relevant tags (study, sports, events, etc.)">
-            </div>
-            
-            <div class="form-group">
-                <label for="mediaType">Post Type</label>
-                <select id="mediaType" class="form-control">
-                    <option value="image">Photo</option>
-                    <option value="video">Video</option>
-                    <option value="event">Event</option>
-                    <option value="announcement">Announcement</option>
-                    <option value="question">Question</option>
-                </select>
-            </div>
-            
-            <button class="btn btn-primary" id="submitUpload" style="width: 100%;">
-                <i class="fas fa-share"></i> Share Post
-            </button>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="authModalTitle">Join CampusSocialite</h2>
-                <button class="close-modal" id="closeAuthModal">&times;</button>
-            </div>
-            
-            <div class="auth-tabs">
-                <div class="auth-tab active" data-tab="login">Sign In</div>
-                <div class="auth-tab" data-tab="register">Create Account</div>
-            </div>
-            
-            <div id="loginForm" class="auth-form">
-                <div class="form-group">
-                    <label for="loginEmail">Campus Email</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="your.email@campus.edu">
+            <div class="modal-body">
+                <div class="video-container">
+                    <video id="modalVideo" controls style="width: 100%; height: 400px;">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
-                
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Your password">
+                <div class="download-links">
+                    <h5>Download Links:</h5>
+                    <a href="#" class="download-link" id="downloadLink1" target="_blank">
+                        <i class="fas fa-download"></i> Download HD Quality (720p)
+                    </a>
+                    <a href="#" class="download-link" id="downloadLink2" target="_blank">
+                        <i class="fas fa-download"></i> Download Full HD (1080p)
+                    </a>
+                    <a href="#" class="download-link" id="downloadLink3" target="_blank">
+                        <i class="fas fa-download"></i> Download 4K Quality (2160p)
+                    </a>
                 </div>
-                
-                <button class="btn btn-primary" id="loginSubmit" style="width: 100%;">
-                    Sign In to CampusSocialite
-                </button>
-            </div>
-            
-            <div id="registerForm" class="auth-form" style="display: none;">
-                <div class="form-group">
-                    <label for="registerName">Full Name</label>
-                    <input type="text" id="registerName" class="form-control" placeholder="Your full name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="registerEmail">Campus Email</label>
-                    <input type="email" id="registerEmail" class="form-control" placeholder="your.email@campus.edu">
-                </div>
-                
-                <div class="form-group">
-                    <label for="registerMajor">Major/Department</label>
-                    <input type="text" id="registerMajor" class="form-control" placeholder="Computer Science, Business, etc.">
-                </div>
-                
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" class="form-control" placeholder="Minimum 6 characters">
-                </div>
-                
-                <button class="btn btn-secondary" id="registerSubmit" style="width: 100%;">
-                    Create Campus Account
-                </button>
-            </div>
-            
-            <div class="auth-footer">
-                <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
             </div>
         </div>
     </div>
@@ -851,604 +1121,690 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>CampusSocialite</h3>
-                    <p>Connecting students across campuses. Share experiences, join communities, and make your campus life unforgettable.</p>
-                    <div class="social-links">
+                    <h3>CNMediaHub</h3>
+                    <p>Your ultimate entertainment destination with movies, music, action content and fun games. MTN Pulse inspired experience.</p>
+                    <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 
                 <div class="footer-column">
-                    <h3>For Students</h3>
+                    <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Find Study Groups</a></li>
-                        <li><a href="#">Campus Events</a></li>
-                        <li><a href="#">Student Clubs</a></li>
-                        <li><a href="#">Housing & Roommates</a></li>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#movies">Movies</a></li>
+                        <li><a href="#music">Music</a></li>
+                        <li><a href="#action">Action</a></li>
+                        <li><a href="#games">Games</a></li>
+                        <li><a href="#order">Order</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
-                    <h3>Resources</h3>
+                    <h3>Contact Us</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Campus Guidelines</a></li>
-                        <li><a href="#">Safety Resources</a></li>
-                        <li><a href="#">Academic Calendar</a></li>
-                        <li><a href="#">Career Services</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Support</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Report Issue</a></li>
-                        <li><a href="#">Community Guidelines</a></li>
+                        <li><i class="fas fa-envelope"></i> paddypride6@gmail.com.</li>
+                        <li><i class="fas fa-phone"></i> +256 779 185 824</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Lira, Uganda</li>
+                        <li><i class="fab fa-whatsapp"></i> WhatsApp Ordering Available</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                <p>&copy; 2024 CampusSocialite. Connecting campus communities worldwide.</p>
+                <p>&copy; 2025 CNMediaHub Entertainment. All rights reserved. | CyberNinja Inspired Design</p>
+                <p style="margin-top: 5px;">All content is for preview purposes. Purchase originals to support creators.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <div id="notificationText">Welcome to CampusSocialite!</div>
-    </div>
-
+    <!-- JavaScript -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
-        // =============================================
-        // FIREBASE CONFIGURATION
-        // =============================================
-        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
-          const firebaseConfig = {
-    apiKey: "AIzaSyDLGkWJcWn_YCWh5_aMnU8S1wjgGVmenSI",
-    authDomain: "campussocialite-1a608.firebaseapp.com",
-    projectId: "campussocialite-1a608",
-    storageBucket: "campussocialite-1a608.firebasestorage.app",
-    messagingSenderId: "225404911299",
-    appId: "1:225404911299:web:44aeacd878522c33c26c76",
-    measurementId: "G-5RFF1YGCWH"
-  };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // =============================================
-        // APPLICATION STATE
-        // =============================================
-        const appState = {
-            currentUser: null,
-            currentFilter: 'all',
-            media: [],
-            isUploading: false
-        };
-
-        // =============================================
-        // DOM ELEMENTS
-        // =============================================
-        const uploadBtn = document.getElementById('uploadBtn');
-        const startUploadBtn = document.getElementById('startUploadBtn');
-        const uploadModal = document.getElementById('uploadModal');
-        const closeModal = document.querySelector('.close-modal');
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const submitUpload = document.getElementById('submitUpload');
-        const mediaGrid = document.getElementById('mediaGrid');
-        const tabs = document.querySelectorAll('.tab');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const authModal = document.getElementById('authModal');
-        const closeAuthModal = document.getElementById('closeAuthModal');
-        const authTabs = document.querySelectorAll('.auth-tab');
-        const loginSubmit = document.getElementById('loginSubmit');
-        const registerSubmit = document.getElementById('registerSubmit');
-        const userProfile = document.getElementById('userProfile');
-        const notification = document.getElementById('notification');
-        const notificationText = document.getElementById('notificationText');
-
-        // =============================================
-        // INITIALIZATION
-        // =============================================
-        function initApp() {
-            setupEventListeners();
-            setupAuthStateListener();
-            loadMedia();
-        }
-
-        // =============================================
-        // AUTHENTICATION SYSTEM
-        // =============================================
-        function setupAuthStateListener() {
-            auth.onAuthStateChanged(user => {
-                appState.currentUser = user;
-                if (user) {
-                    updateUIForUser(user);
-                    showNotification(`Welcome back, ${user.displayName || user.email}!`, 'success');
-                } else {
-                    updateUIForGuest();
-                }
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        const navLinks = document.querySelectorAll('nav ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mainNav').classList.remove('active');
+                
+                // Update active class
+                navLinks.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Sample data for movies, music, and action content with actual video/image URLs
+        const movies = [
+            { 
+                id: 1, 
+                title: "African Giant", 
+                description: "A thrilling drama about a young man's rise to power", 
+                duration: "2h 15m", 
+                year: "2023",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/african-giant-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/african-giant-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/african-giant-4k.mp4" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "City Lights", 
+                description: "Romantic comedy set in the heart of Lagos", 
+                duration: "1h 48m", 
+                year: "2023",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                image: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/city-lights-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/city-lights-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/city-lights-4k.mp4" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "The Last Warrior", 
+                description: "Epic action film with stunning visuals", 
+                duration: "2h 30m", 
+                year: "2022",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/last-warrior-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/last-warrior-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/last-warrior-4k.mp4" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Voices of Freedom", 
+                description: "Historical drama about Nigeria's independence", 
+                duration: "2h 5m", 
+                year: "2023",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/voices-freedom-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/voices-freedom-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/voices-freedom-4k.mp4" }
+                ]
+            }
+        ];
+        
+        const music = [
+            { 
+                id: 1, 
+                title: "Afrobeat Vibes", 
+                artist: "Burna Boy", 
+                genre: "Afrobeat", 
+                duration: "3:45",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/afrobeat-vibes.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/afrobeat-vibes.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/afrobeat-vibes.flac" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "Love in Lagos", 
+                artist: "Tiwa Savage", 
+                genre: "R&B/Pop", 
+                duration: "4:12",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/love-lagos.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/love-lagos.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/love-lagos.flac" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "Street Anthem", 
+                artist: "Olamide", 
+                genre: "Hip Hop", 
+                duration: "3:20",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/street-anthem.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/street-anthem.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/street-anthem.flac" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Spiritual Journey", 
+                artist: "Asake", 
+                genre: "Afro-Fusion", 
+                duration: "3:58",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/spiritual-journey.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/spiritual-journey.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/spiritual-journey.flac" }
+                ]
+            }
+        ];
+        
+        const actions = [
+            { 
+                id: 1, 
+                title: "Extreme Parkour", 
+                description: "Mind-blowing parkour stunts across urban landscapes", 
+                duration: "12:45",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/extreme-parkour-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/extreme-parkour-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/extreme-parkour-4k.mp4" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "MMA Highlights", 
+                description: "Best MMA fights and techniques compilation", 
+                duration: "18:30",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/mma-highlights-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/mma-highlights-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/mma-highlights-4k.mp4" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "Adventure Travel", 
+                description: "Extreme adventure travel across Africa", 
+                duration: "22:15",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+                image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/adventure-travel-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/adventure-travel-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/adventure-travel-4k.mp4" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Street Workout", 
+                description: "Incredible calisthenics and street workout routines", 
+                duration: "15:20",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                image: "https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/street-workout-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/street-workout-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/street-workout-4k.mp4" }
+                ]
+            }
+        ];
+        
+        // Quiz questions
+        const quizQuestions = [
+            {
+                question: "Which Nigerian singer is known as the 'African Giant'?",
+                options: ["Wizkid", "Burna Boy", "Davido", "Olamide"],
+                correct: 1
+            },
+            {
+                question: "In which year did Nigeria gain independence?",
+                options: ["1957", "1960", "1963", "1970"],
+                correct: 1
+            },
+            {
+                question: "Which of these is NOT a Nollywood film genre?",
+                options: ["Epic", "Rom-com", "Kannywood", "Thriller"],
+                correct: 2
+            },
+            {
+                question: "Who is known as the 'Queen of Afrobeats'?",
+                options: ["Tiwa Savage", "Yemi Alade", "Simi", "Niniola"],
+                correct: 0
+            },
+            {
+                question: "Which movie holds the record for highest-grossing Nollywood film?",
+                options: ["The Wedding Party", "Omo Ghetto: The Saga", "King of Boys", "Living in Bondage"],
+                correct: 1
+            }
+        ];
+        
+        // Music Game Data
+        const musicGameTracks = [
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                options: ["Burna Boy - Afrobeat Vibes", "Wizkid - Essence", "Davido - Fall", "Olamide - Wo"],
+                correct: 0
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                options: ["Tiwa Savage - Love in Lagos", "Yemi Alade - Johnny", "Simi - Duduke", "Niniola - Maradona"],
+                correct: 0
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                options: ["Olamide - Street Anthem", "Phyno - Connect", "Falz - Bop Daddy", "M.I Abaga - You Rappers Should Fix Up Your Lives"],
+                correct: 0
+            }
+        ];
+        
+        // Generate movie cards
+        function generateMovieCards() {
+            const movieGrid = document.getElementById('moviesGrid');
+            movieGrid.innerHTML = '';
+            
+            movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${movie.image}" alt="${movie.title}">
+                        <h3>${movie.title}</h3>
+                        <div class="play-btn" onclick="openVideoModal('${movie.previewVideo}', '${movie.title}', ${JSON.stringify(movie.downloadLinks).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>${movie.title}</h4>
+                        <p>${movie.description}</p>
+                        <p><strong>Duration:</strong> ${movie.duration} | <strong>Year:</strong> ${movie.year}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-preview" onclick="openVideoModal('${movie.previewVideo}', '${movie.title}', ${JSON.stringify(movie.downloadLinks).replace(/"/g, '&quot;')})">Watch Preview</button>
+                            <a href="https://wa.me/2348123456789?text=Hi%20PulseHub%2C%20I%20want%20to%20order%20the%20movie%20titled:%20${encodeURIComponent(movie.title)}" class="btn btn-whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Order
+                            </a>
+                        </div>
+                    </div>
+                `;
+                movieGrid.appendChild(card);
             });
         }
-
-        async function signUp(email, password, displayName, major) {
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                await userCredential.user.updateProfile({
-                    displayName: displayName
+        
+        // Generate music cards
+        function generateMusicCards() {
+            const musicGrid = document.getElementById('musicGrid');
+            musicGrid.innerHTML = '';
+            
+            music.forEach(song => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${song.image}" alt="${song.title}">
+                        <h3>${song.title}</h3>
+                        <div class="play-btn" onclick="openAudioModal('${song.previewAudio}', '${song.title} by ${song.artist}', ${JSON.stringify(song.downloadLinks).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>${song.title}</h4>
+                        <p><strong>Artist:</strong> ${song.artist}</p>
+                        <p><strong>Genre:</strong> ${song.genre} | <strong>Duration:</strong> ${song.duration}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-preview" onclick="openAudioModal('${song.previewAudio}', '${song.title} by ${song.artist}', ${JSON.stringify(song.downloadLinks).replace(/"/g, '&quot;')})">Listen Preview</button>
+                            <a href="https://wa.me/2348123456789?text=Hi%20PulseHub%2C%20I%20want%20to%20order%20the%20song%20titled:%20${encodeURIComponent(song.title + ' by ' + song.artist)}" class="btn btn-whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Order
+                            </a>
+                        </div>
+                    </div>
+                `;
+                musicGrid.appendChild(card);
+            });
+        }
+        
+        // Generate action cards
+        function generateActionCards() {
+            const actionGrid = document.getElementById('actionGrid');
+            actionGrid.innerHTML = '';
+            
+            actions.forEach(action => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${action.image}" alt="${action.title}">
+                        <h3>${action.title}</h3>
+                        <div class="play-btn" onclick="openVideoModal('${action.previewVideo}', '${action.title}', ${JSON.stringify(action.downloadLinks).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>${action.title}</h4>
+                        <p>${action.description}</p>
+                        <p><strong>Duration:</strong> ${action.duration}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-preview" onclick="openVideoModal('${action.previewVideo}', '${action.title}', ${JSON.stringify(action.downloadLinks).replace(/"/g, '&quot;')})">Watch Preview</button>
+                            <a href="https://wa.me/2348123456789?text=Hi%20PulseHub%2C%20I%20want%20to%20order%20the%20action%20content%20titled:%20${encodeURIComponent(action.title)}" class="btn btn-whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Order
+                            </a>
+                        </div>
+                    </div>
+                `;
+                actionGrid.appendChild(card);
+            });
+        }
+        
+        // Video Modal Functions
+        function openVideoModal(videoUrl, title, downloadLinks) {
+            const modal = document.getElementById('videoModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalVideo = document.getElementById('modalVideo');
+            const downloadLink1 = document.getElementById('downloadLink1');
+            const downloadLink2 = document.getElementById('downloadLink2');
+            const downloadLink3 = document.getElementById('downloadLink3');
+            
+            modalTitle.textContent = `Preview: ${title}`;
+            modalVideo.src = videoUrl;
+            
+            // Set download links
+            if (downloadLinks && downloadLinks.length >= 3) {
+                downloadLink1.href = downloadLinks[0].url;
+                downloadLink1.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[0].quality}`;
+                
+                downloadLink2.href = downloadLinks[1].url;
+                downloadLink2.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[1].quality}`;
+                
+                downloadLink3.href = downloadLinks[2].url;
+                downloadLink3.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[2].quality}`;
+            }
+            
+            modal.style.display = 'flex';
+            
+            // Load and play the video
+            modalVideo.load();
+        }
+        
+        function openAudioModal(audioUrl, title, downloadLinks) {
+            const modal = document.getElementById('videoModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalVideo = document.getElementById('modalVideo');
+            const downloadLink1 = document.getElementById('downloadLink1');
+            const downloadLink2 = document.getElementById('downloadLink2');
+            const downloadLink3 = document.getElementById('downloadLink3');
+            
+            modalTitle.textContent = `Preview: ${title}`;
+            
+            // Change video element to audio
+            modalVideo.innerHTML = `
+                <audio controls style="width: 100%; height: 50px; margin-top: 20px;">
+                    <source src="${audioUrl}" type="audio/mp3">
+                    Your browser does not support the audio element.
+                </audio>
+            `;
+            
+            // Set download links
+            if (downloadLinks && downloadLinks.length >= 3) {
+                downloadLink1.href = downloadLinks[0].url;
+                downloadLink1.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[0].quality}`;
+                
+                downloadLink2.href = downloadLinks[1].url;
+                downloadLink2.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[1].quality}`;
+                
+                downloadLink3.href = downloadLinks[2].url;
+                downloadLink3.innerHTML = `<i class="fas fa-download"></i> Download ${downloadLinks[2].quality}`;
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Close modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('videoModal').style.display = 'none';
+            const modalVideo = document.getElementById('modalVideo');
+            modalVideo.pause();
+            modalVideo.innerHTML = '';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                const modalVideo = document.getElementById('modalVideo');
+                modalVideo.pause();
+                modalVideo.innerHTML = '';
+            }
+        });
+        
+        // Quiz functionality
+        let currentQuestion = 0;
+        let quizScore = 0;
+        let userAnswers = [];
+        
+        function loadQuestion() {
+            const question = quizQuestions[currentQuestion];
+            document.getElementById('quizQuestion').textContent = `Question ${currentQuestion + 1}: ${question.question}`;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    userAnswers[currentQuestion] = parseInt(this.dataset.index);
                 });
                 
-                // Create user document in Firestore
-                await db.collection('users').doc(userCredential.user.uid).set({
-                    displayName: displayName,
-                    email: email,
-                    major: major,
-                    joinDate: firebase.firestore.FieldValue.serverTimestamp(),
-                    avatarUrl: '',
-                    bio: '',
-                    campusStats: {
-                        posts: 0,
-                        likes: 0,
-                        joinedGroups: 0
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update progress
+            document.getElementById('quizProgress').textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+            
+            // Update next button text
+            const nextBtn = document.getElementById('nextQuestionBtn');
+            if (currentQuestion === quizQuestions.length - 1) {
+                nextBtn.textContent = 'Finish Quiz';
+            } else {
+                nextBtn.textContent = 'Next Question';
+            }
+            
+            // Hide result
+            document.getElementById('quizResult').style.display = 'none';
+        }
+        
+        function showQuizResult() {
+            const resultElement = document.getElementById('quizResult');
+            resultElement.style.display = 'block';
+            resultElement.innerHTML = `
+                <h3>Quiz Completed!</h3>
+                <p>Your score: ${quizScore} out of ${quizQuestions.length}</p>
+                <p>${quizScore === quizQuestions.length ? '🎉 Perfect! You\'re a true entertainment expert!' : 
+                    quizScore >= quizQuestions.length/2 ? '👍 Good job! You know your entertainment!' : 
+                    '💪 Keep learning! Try again to improve your score!'}</p>
+                <button class="btn btn-preview" onclick="restartQuiz()" style="margin-top: 10px;">Play Again</button>
+            `;
+        }
+        
+        function restartQuiz() {
+            currentQuestion = 0;
+            quizScore = 0;
+            userAnswers = [];
+            loadQuestion();
+        }
+        
+        // Music Game functionality
+        let currentTrack = 0;
+        let musicGameScore = 0;
+        let musicUserAnswers = [];
+        
+        function loadMusicTrack() {
+            const track = musicGameTracks[currentTrack];
+            const audioElement = document.getElementById('musicGameAudio');
+            
+            // Update audio source
+            audioElement.src = track.audioUrl;
+            audioElement.load();
+            
+            // Update info
+            document.getElementById('musicGameInfo').textContent = `Track ${currentTrack + 1} of ${musicGameTracks.length}`;
+            
+            // Update options
+            const optionsContainer = document.getElementById('musicOptions');
+            optionsContainer.innerHTML = '';
+            
+            track.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'music-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.music-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    musicUserAnswers[currentTrack] = parseInt(this.dataset.index);
+                    
+                    // Check if answer is correct
+                    if (parseInt(this.dataset.index) === track.correct) {
+                        this.style.backgroundColor = '#25D366';
+                    } else {
+                        this.style.backgroundColor = '#FF4081';
+                        // Highlight correct answer
+                        document.querySelector(`.music-option[data-index="${track.correct}"]`).style.backgroundColor = '#25D366';
                     }
                 });
                 
-                return userCredential;
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        async function signIn(email, password) {
-            try {
-                return await auth.signInWithEmailAndPassword(email, password);
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        async function signOut() {
-            try {
-                await auth.signOut();
-                showNotification('Signed out successfully', 'success');
-            } catch (error) {
-                showNotification('Error signing out: ' + error.message, 'error');
-            }
-        }
-
-        // =============================================
-        // MEDIA MANAGEMENT
-        // =============================================
-        async function loadMedia(filter = 'all') {
-            loadingSpinner.style.display = 'block';
-            appState.currentFilter = filter;
-            
-            try {
-                let query = db.collection('posts').orderBy('timestamp', 'desc').limit(20);
-                
-                if (filter !== 'all') {
-                    query = query.where('type', '==', filter);
-                }
-                
-                const snapshot = await query.get();
-                appState.media = [];
-                
-                snapshot.forEach(doc => {
-                    const post = doc.data();
-                    post.id = doc.id;
-                    appState.media.push(post);
-                });
-                
-                displayMedia(appState.media);
-            } catch (error) {
-                console.error('Error loading posts:', error);
-                showNotification('Error loading posts', 'error');
-                // Fallback to sample data
-                displayMedia(getSamplePosts().filter(post => 
-                    filter === 'all' || post.type === filter
-                ));
-            }
-        }
-
-        function displayMedia(mediaArray) {
-            mediaGrid.innerHTML = '';
-            
-            if (mediaArray.length === 0) {
-                mediaGrid.innerHTML = `
-                    <div class="no-media">
-                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <h3>No posts yet</h3>
-                        <p>Be the first to share something with your campus community!</p>
-                    </div>
-                `;
-                loadingSpinner.style.display = 'none';
-                return;
-            }
-            
-            mediaArray.forEach(post => {
-                const mediaCard = document.createElement('div');
-                mediaCard.className = 'media-card fade-in';
-                mediaCard.dataset.id = post.id;
-                
-                const thumbnailClass = post.type === 'video' ? 'media-thumbnail video-thumbnail' : 'media-thumbnail';
-                const timestamp = formatTimestamp(post.timestamp);
-                const avatarText = post.authorName ? post.authorName.charAt(0).toUpperCase() : 'U';
-                
-                mediaCard.innerHTML = `
-                    ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${post.title}" class="${thumbnailClass}">` : ''}
-                    <div class="media-info">
-                        <h3 class="media-title">${post.title}</h3>
-                        <p style="color: #ccc; margin-bottom: 10px; font-size: 0.9rem;">${post.description || ''}</p>
-                        <div class="media-meta">
-                            <span><i class="fas fa-heart"></i> ${post.likes || 0}</span>
-                            <span><i class="fas fa-comment"></i> ${post.comments || 0}</span>
-                            <span><i class="fas fa-share"></i> ${post.shares || 0}</span>
-                        </div>
-                        <div class="media-author">
-                            <div class="author-avatar">${avatarText}</div>
-                            <div>
-                                <div style="font-weight: 500;">${post.authorName || 'Unknown User'}</div>
-                                <div style="font-size: 0.8rem; color: #aaa;">${timestamp}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                mediaGrid.appendChild(mediaCard);
+                optionsContainer.appendChild(optionElement);
             });
             
-            loadingSpinner.style.display = 'none';
-        }
-
-        async function handleUpload() {
-            if (!appState.currentUser) {
-                showNotification('Please sign in to create posts', 'error');
-                authModal.style.display = 'flex';
-                return;
+            // Update score display
+            document.getElementById('musicGameScore').textContent = `Score: ${musicGameScore}/${musicGameTracks.length}`;
+            
+            // Update next button text
+            const nextBtn = document.getElementById('nextMusicTrackBtn');
+            if (currentTrack === musicGameTracks.length - 1) {
+                nextBtn.textContent = 'Finish Game';
+            } else {
+                nextBtn.textContent = 'Next Track';
             }
             
-            const title = document.getElementById('mediaTitle').value;
-            const description = document.getElementById('mediaDescription').value;
-            const tags = document.getElementById('mediaTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
-            const type = document.getElementById('mediaType').value;
-            const files = fileInput.files;
-            
-            if (!title.trim()) {
-                showNotification('Please add a title for your post', 'error');
-                return;
-            }
-            
-            submitUpload.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
-            submitUpload.disabled = true;
-            appState.isUploading = true;
-            
-            try {
-                let imageUrl = '';
-                
-                // Upload file if selected
-                if (files.length > 0) {
-                    const file = files[0];
-                    const fileName = `posts/${appState.currentUser.uid}/${Date.now()}_${file.name}`;
-                    const fileRef = storage.ref().child(fileName);
-                    const uploadTask = fileRef.put(file);
-                    
-                    await uploadTask;
-                    imageUrl = await uploadTask.snapshot.ref.getDownloadURL();
-                }
-                
-                // Create post document
-                const postData = {
-                    title: title,
-                    description: description,
-                    type: type,
-                    authorId: appState.currentUser.uid,
-                    authorName: appState.currentUser.displayName || appState.currentUser.email,
-                    imageUrl: imageUrl,
-                    tags: tags,
-                    likes: 0,
-                    comments: 0,
-                    shares: 0,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'published',
-                    campus: 'General'
-                };
-                
-                await db.collection('posts').add(postData);
-                
-                showNotification('Post published successfully!', 'success');
-                closeUploadModal();
-                loadMedia(appState.currentFilter);
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                showNotification('Error publishing post: ' + error.message, 'error');
-            } finally {
-                submitUpload.innerHTML = '<i class="fas fa-share"></i> Share Post';
-                submitUpload.disabled = false;
-                appState.isUploading = false;
-            }
+            // Hide result
+            document.getElementById('musicGameResult').style.display = 'none';
         }
-
-        // =============================================
-        // UI MANAGEMENT
-        // =============================================
-        function updateUIForUser(user) {
-            const avatar = userProfile.querySelector('.avatar');
-            const nameSpan = userProfile.querySelector('span');
-            
-            avatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
-            nameSpan.textContent = user.displayName || 'User';
-            
-            uploadBtn.style.display = 'block';
-            uploadBtn.innerHTML = '<i class="fas fa-plus"></i> Create Post';
-            
-            // Add sign out option
-            userProfile.onclick = () => {
-                if (confirm('Are you sure you want to sign out?')) {
-                    signOut();
-                }
-            };
-        }
-
-        function updateUIForGuest() {
-            const avatar = userProfile.querySelector('.avatar');
-            const nameSpan = userProfile.querySelector('span');
-            
-            avatar.textContent = '?';
-            nameSpan.textContent = 'Guest';
-            
-            uploadBtn.style.display = 'block';
-            uploadBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-            
-            userProfile.onclick = () => {
-                authModal.style.display = 'flex';
-            };
-        }
-
-        function openUploadModal() {
-            if (!appState.currentUser) {
-                authModal.style.display = 'flex';
-                return;
-            }
-            uploadModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeUploadModal() {
-            uploadModal.style.display = 'none';
-            authModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            resetUploadForm();
-        }
-
-        function resetUploadForm() {
-            document.getElementById('mediaTitle').value = '';
-            document.getElementById('mediaDescription').value = '';
-            document.getElementById('mediaTags').value = '';
-            fileInput.value = '';
-            uploadArea.innerHTML = `
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Drag & Drop your files here</h3>
-                <p>or click to browse (Supports images, videos, documents)</p>
+        
+        function showMusicGameResult() {
+            const resultElement = document.getElementById('musicGameResult');
+            resultElement.style.display = 'block';
+            resultElement.innerHTML = `
+                <h3>Music Game Completed!</h3>
+                <p>Your score: ${musicGameScore} out of ${musicGameTracks.length}</p>
+                <p>${musicGameScore === musicGameTracks.length ? '🎉 Perfect Pitch! You know your music!' : 
+                    musicGameScore >= musicGameTracks.length/2 ? '👍 Good ear! You\'re a music lover!' : 
+                    '🎵 Keep listening! You\'ll improve with time!'}</p>
+                <button class="btn btn-preview" onclick="restartMusicGame()" style="margin-top: 10px;">Play Again</button>
             `;
         }
-
-        function showNotification(message, type = 'success') {
-            notificationText.textContent = message;
-            notification.className = 'notification';
-            notification.classList.add('show', type);
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 4000);
+        
+        function restartMusicGame() {
+            currentTrack = 0;
+            musicGameScore = 0;
+            musicUserAnswers = [];
+            loadMusicTrack();
         }
-
-        // =============================================
-        // EVENT LISTENERS
-        // =============================================
-        function setupEventListeners() {
-            // Upload modal
-            uploadBtn.addEventListener('click', openUploadModal);
-            startUploadBtn.addEventListener('click', openUploadModal);
-            closeModal.addEventListener('click', closeUploadModal);
+        
+        // Initialize content and games
+        document.addEventListener('DOMContentLoaded', function() {
+            generateMovieCards();
+            generateMusicCards();
+            generateActionCards();
+            loadQuestion();
+            loadMusicTrack();
             
-            // File upload
-            uploadArea.addEventListener('click', () => fileInput.click());
-            uploadArea.addEventListener('dragover', (e) => {
+            // Handle next question button for quiz
+            document.getElementById('nextQuestionBtn').addEventListener('click', function() {
+                // Check if an option is selected
+                if (userAnswers[currentQuestion] === undefined) {
+                    alert('Please select an answer before proceeding!');
+                    return;
+                }
+                
+                // Check if answer is correct
+                if (userAnswers[currentQuestion] === quizQuestions[currentQuestion].correct) {
+                    quizScore++;
+                }
+                
+                // Move to next question or show result
+                if (currentQuestion < quizQuestions.length - 1) {
+                    currentQuestion++;
+                    loadQuestion();
+                } else {
+                    showQuizResult();
+                }
+            });
+            
+            // Handle next track button for music game
+            document.getElementById('nextMusicTrackBtn').addEventListener('click', function() {
+                // Check if an option is selected
+                if (musicUserAnswers[currentTrack] === undefined) {
+                    alert('Please select an answer before proceeding!');
+                    return;
+                }
+                
+                // Check if answer is correct
+                if (musicUserAnswers[currentTrack] === musicGameTracks[currentTrack].correct) {
+                    musicGameScore++;
+                }
+                
+                // Move to next track or show result
+                if (currentTrack < musicGameTracks.length - 1) {
+                    currentTrack++;
+                    loadMusicTrack();
+                } else {
+                    showMusicGameResult();
+                }
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                uploadArea.style.borderColor = 'var(--campus-green)';
-                uploadArea.style.background = 'rgba(46, 204, 113, 0.1)';
-            });
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.style.borderColor = 'var(--gray-light)';
-                uploadArea.style.background = 'transparent';
-            });
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                fileInput.files = e.dataTransfer.files;
-                uploadArea.innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                    <h3>${e.dataTransfer.files.length} file(s) selected</h3>
-                    <p>Ready to upload</p>
-                `;
-            });
-            
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    uploadArea.innerHTML = `
-                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                        <h3>${e.target.files.length} file(s) selected</h3>
-                        <p>Ready to upload</p>
-                    `;
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
                 }
             });
-            
-            // Form submission
-            submitUpload.addEventListener('click', handleUpload);
-            
-            // Tabs
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    loadMedia(tab.dataset.filter);
-                });
-            });
-            
-            // Auth modal
-            closeAuthModal.addEventListener('click', closeUploadModal);
-            window.addEventListener('click', (e) => {
-                if (e.target === uploadModal || e.target === authModal) {
-                    closeUploadModal();
-                }
-            });
-            
-            // Auth tabs
-            authTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.dataset.tab;
-                    authTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    document.getElementById('loginForm').style.display = tabName === 'login' ? 'block' : 'none';
-                    document.getElementById('registerForm').style.display = tabName === 'register' ? 'block' : 'none';
-                    document.getElementById('authModalTitle').textContent = tabName === 'login' ? 'Sign In to CampusSocialite' : 'Join CampusSocialite';
-                });
-            });
-            
-            // Auth form submission
-            loginSubmit.addEventListener('click', async () => {
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                if (!email || !password) {
-                    showNotification('Please enter both email and password', 'error');
-                    return;
-                }
-                
-                loginSubmit.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
-                loginSubmit.disabled = true;
-                
-                try {
-                    await signIn(email, password);
-                    authModal.style.display = 'none';
-                } catch (error) {
-                    showNotification('Sign in failed: ' + error.message, 'error');
-                }
-                
-                loginSubmit.innerHTML = 'Sign In to CampusSocialite';
-                loginSubmit.disabled = false;
-            });
-            
-            registerSubmit.addEventListener('click', async () => {
-                const name = document.getElementById('registerName').value;
-                const email = document.getElementById('registerEmail').value;
-                const major = document.getElementById('registerMajor').value;
-                const password = document.getElementById('registerPassword').value;
-                
-                if (!name || !email || !password) {
-                    showNotification('Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    showNotification('Password must be at least 6 characters', 'error');
-                    return;
-                }
-                
-                registerSubmit.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
-                registerSubmit.disabled = true;
-                
-                try {
-                    await signUp(email, password, name, major);
-                    authModal.style.display = 'none';
-                } catch (error) {
-                    showNotification('Registration failed: ' + error.message, 'error');
-                }
-                
-                registerSubmit.innerHTML = 'Create Campus Account';
-                registerSubmit.disabled = false;
-            });
-        }
-
-        // =============================================
-        // UTILITY FUNCTIONS
-        // =============================================
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return 'Recently';
-            
-            try {
-                const date = timestamp.toDate();
-                const now = new Date();
-                const diffMs = now - date;
-                const diffMins = Math.floor(diffMs / (1000 * 60));
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                
-                if (diffMins < 1) return 'Just now';
-                if (diffMins < 60) return `${diffMins}m ago`;
-                if (diffHours < 24) return `${diffHours}h ago`;
-                if (diffDays < 7) return `${diffDays}d ago`;
-                
-                return date.toLocaleDateString();
-            } catch (error) {
-                return 'Recently';
-            }
-        }
-
-        function getSamplePosts() {
-            return [
-                {
-                    id: 1,
-                    title: "Campus Sunset Views 🌅",
-                    description: "Beautiful evening at the university campus. Perfect weather for studying outside!",
-                    type: "image",
-                    authorName: "Alex Johnson",
-                    likes: 24,
-                    comments: 5,
-                    shares: 2,
-                    timestamp: { toDate: () => new Date(Date.now() - 2 * 60 * 60 * 1000) },
-                    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                },
-                {
-                    id: 2,
-                    title: "Study Group Forming for CS101",
-                    description: "Looking for 3-4 people to form a study group for the upcoming midterms. Meet twice a week at the library.",
-                    type: "announcement",
-                    authorName: "Sarah Chen",
-                    likes: 15,
-                    comments: 8,
-                    shares: 3,
-                    timestamp: { toDate: () => new Date(Date.now() - 5 * 60 * 60 * 1000) }
-                },
-                {
-                    id: 3,
-                    title: "Basketball Tournament This Friday!",
-                    description: "Intramural basketball tournament at the campus gym. Sign up by Thursday! Free pizza for participants.",
-                    type: "event",
-                    authorName: "Campus Sports",
-                    likes: 42,
-                    comments: 12,
-                    shares: 15,
-                    timestamp: { toDate: () => new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
-                    imageUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                }
-            ];
-        }
-
-        // =============================================
-        // INITIALIZE APP
-        // =============================================
-        window.addEventListener('load', initApp);
+        });
+        
+        // Initialize Plyr for video player
+        document.addEventListener('DOMContentLoaded', function() {
+            const players = Plyr.setup('.game-audio-player');
+        });
     </script>
 </body>
 </html>
