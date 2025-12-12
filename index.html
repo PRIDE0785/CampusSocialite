@@ -41,7 +41,137 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+  
+    .site-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--pulse-bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .site-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .pulse-loader {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .pulse-loader:before,
+    .pulse-loader:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: var(--pulse-orange);
+        animation: pulseLoader 1.5s infinite ease-in-out;
+    }
+
+    .pulse-loader:after {
+        animation-delay: -0.75s;
+    }
+
+    @keyframes pulseLoader {
+        0%, 100% {
+            transform: scale(0);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1);
+            opacity: 0;
+        }
+    }
+
+    .loader-logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--pulse-orange);
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
+    }
+
+    .loader-logo i {
+        margin-right: 10px;
+        font-size: 32px;
+        animation: pulse 2s infinite;
+    }
+
+    .loader-text {
+        color: var(--pulse-light);
+        font-size: 18px;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: 500;
+    }
+
+    .loader-progress {
+        width: 200px;
+        height: 4px;
+        background-color: var(--pulse-gray);
+        border-radius: 2px;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+
+    .loader-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .loader-stats {
+        display: flex;
+        gap: 30px;
+        margin-top: 25px;
+        color: var(--pulse-light);
+        font-size: 14px;
+    }
+
+    .loader-stat {
+        text-align: center;
+    }
+
+    .loader-stat-number {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--pulse-orange);
+        margin-bottom: 5px;
+    }
+
+    .loader-stat-label {
+        opacity: 0.8;
+    }
+
+    /* Optional: Fade in main content after loader */
+    .main-content {
+        opacity: 0;
+        animation: fadeInContent 1s ease 0.5s forwards;
+    }
+
+    @keyframes fadeInContent {
+        to {
+            opacity: 1;
+        }
+    }
         /* Header & Navigation */
         header {
             background-color: var(--pulse-black);
@@ -142,6 +272,110 @@
             color: var(--pulse-orange);
             font-size: 24px;
             cursor: pointer;
+        }
+        
+        /* Search & Filter Section */
+        .search-section {
+            background-color: var(--pulse-dark);
+            padding: 30px 0;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--pulse-gray);
+        }
+        
+        .search-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background-color: var(--pulse-black);
+            border: 2px solid var(--pulse-gray);
+            border-radius: 50px;
+            color: var(--pulse-light);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--pulse-orange);
+            box-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--pulse-orange);
+            font-size: 20px;
+        }
+        
+        .filter-select {
+            padding: 15px 20px;
+            background-color: var(--pulse-black);
+            border: 2px solid var(--pulse-gray);
+            border-radius: 50px;
+            color: var(--pulse-light);
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--pulse-orange);
+            box-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(90deg, var(--pulse-orange) 0%, var(--pulse-orange-light) 100%);
+            color: var(--pulse-black);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
+        }
+        
+        .content-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .shuffle-info {
+            background-color: rgba(255, 106, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--pulse-orange);
+            font-size: 14px;
+            color: var(--pulse-orange);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         /* Hero Section */
@@ -321,6 +555,19 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
         
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
         .play-btn {
             position: absolute;
             top: 50%;
@@ -364,6 +611,20 @@
             margin-bottom: 15px;
             font-size: 15px;
             color: #ccc;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .card-actions {
@@ -491,6 +752,38 @@
         .game-card p {
             margin-bottom: 20px;
             color: #ddd;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .game-difficulty {
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .game-shuffle-btn {
+            background: none;
+            border: 1px solid var(--pulse-orange);
+            color: var(--pulse-orange);
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+        
+        .game-shuffle-btn:hover {
+            background-color: var(--pulse-orange);
+            color: var(--pulse-black);
         }
         
         /* Quiz Game */
@@ -854,6 +1147,10 @@
                 width: 100%;
                 text-align: center;
             }
+            
+            .search-container {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* Pulse effect for special elements */
@@ -911,6 +1208,41 @@
     </style>
 </head>
 <body>
+    <!-- Add this HTML just after the opening <body> tag -->
+    <!-- Site Loader -->
+    <div class="site-loader" id="siteLoader">
+        <div class="loader-logo">
+            <i class="fas fa-bolt"></i>
+            CNMediaHub
+        </div>
+        
+        <div class="pulse-loader"></div>
+        
+        <div class="loader-text" id="loaderText">Loading Entertainment Hub...</div>
+        
+        <div class="loader-progress">
+            <div class="loader-progress-bar" id="loaderProgress"></div>
+        </div>
+        
+        <div class="loader-stats">
+            <div class="loader-stat">
+                <div class="loader-stat-number" id="moviesCount">0</div>
+                <div class="loader-stat-label">Movies</div>
+            </div>
+            <div class="loader-stat">
+                <div class="loader-stat-number" id="musicCount">0</div>
+                <div class="loader-stat-label">Music</div>
+            </div>
+            <div class="loader-stat">
+                <div class="loader-stat-number" id="gamesCount">0</div>
+                <div class="loader-stat-label">Games</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wrap your existing content in this div -->
+    <div class="main-content">
+        <!-- Your existing header and all other content goes here -->
     <!-- Header -->
     <header>
         <div class="container nav-container">
@@ -953,6 +1285,44 @@
                 <h2>Latest Movies</h2>
             </div>
             
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="movieSearch" placeholder="Search movies by title, genre, or region...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select class="filter-select" id="movieRegion">
+                        <option value="">All Regions</option>
+                        <option value="Nollywood">Nollywood</option>
+                        <option value="Hollywood">Hollywood</option>
+                        <option value="Bollywood">Bollywood</option>
+                        <option value="African">African</option>
+                        <option value="European">European</option>
+                        <option value="Asian">Asian</option>
+                    </select>
+                    <select class="filter-select" id="movieGenre">
+                        <option value="">All Genres</option>
+                        <option value="Action">Action</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                    </select>
+                    <button class="refresh-btn" id="shuffleMovies">
+                        <i class="fas fa-random"></i> Shuffle Movies
+                    </button>
+                </div>
+            </div>
+            
+            <div class="content-controls">
+                <div class="shuffle-info">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Movies refresh every 30 seconds. Showing random selection of 3 movies</span>
+                </div>
+                <div id="movieCounter">Showing 4 of 20+ movies</div>
+            </div>
+            
             <div class="content-grid" id="moviesGrid">
                 <!-- Movie cards will be generated by JavaScript -->
             </div>
@@ -966,6 +1336,27 @@
                 <h2>Hot Music</h2>
             </div>
             
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="musicSearch" placeholder="Search music by title, artist, or genre...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select class="filter-select" id="musicGenre">
+                        <option value="">All Genres</option>
+                        <option value="Afrobeat">Afrobeat</option>
+                        <option value="Hip Hop">Hip Hop</option>
+                        <option value="R&B">R&B</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Reggae">Reggae</option>
+                        <option value="Gospel">Gospel</option>
+                    </select>
+                    <button class="refresh-btn" id="shuffleMusic">
+                        <i class="fas fa-random"></i> Shuffle Music
+                    </button>
+                </div>
+            </div>
+            
             <div class="content-grid" id="musicGrid">
                 <!-- Music cards will be generated by JavaScript -->
             </div>
@@ -977,6 +1368,26 @@
         <div class="container">
             <div class="section-title">
                 <h2>Action Content</h2>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="actionSearch" placeholder="Search action content...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select class="filter-select" id="actionType">
+                        <option value="">All Types</option>
+                        <option value="Parkour">Parkour</option>
+                        <option value="MMA">MMA</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Stunts">Stunts</option>
+                    </select>
+                    <button class="refresh-btn" id="shuffleAction">
+                        <i class="fas fa-random"></i> Shuffle Action
+                    </button>
+                </div>
             </div>
             
             <div class="content-grid" id="actionGrid">
@@ -994,6 +1405,12 @@
             
             <div class="games-container">
                 <div class="game-card">
+                    <div class="game-meta">
+                        <div class="game-difficulty">Easy</div>
+                        <button class="game-shuffle-btn" onclick="shuffleQuiz()">
+                            <i class="fas fa-random"></i> New Quiz
+                        </button>
+                    </div>
                     <h3>Movie Trivia Challenge</h3>
                     <p>Test your knowledge of movies with this fun trivia game. Answer 5 questions and see how much of a movie buff you are!</p>
                     
@@ -1016,6 +1433,12 @@
                 </div>
                 
                 <div class="game-card">
+                    <div class="game-meta">
+                        <div class="game-difficulty">Medium</div>
+                        <button class="game-shuffle-btn" onclick="shuffleMusicGame()">
+                            <i class="fas fa-random"></i> New Game
+                        </button>
+                    </div>
                     <h3>Music Guess Game</h3>
                     <p>Listen to the preview and guess the song title or artist. You have 3 tracks to guess!</p>
                     
@@ -1038,6 +1461,62 @@
                         </div>
                         
                         <div class="music-game-result" id="musicGameResult">
+                            <!-- Result will be shown here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-meta">
+                        <div class="game-difficulty">Medium</div>
+                        <button class="game-shuffle-btn" onclick="shuffleMovieGuess()">
+                            <i class="fas fa-random"></i> New Game
+                        </button>
+                    </div>
+                    <h3>Movie Quote Challenge</h3>
+                    <p>Can you guess which movie these famous quotes are from? Test your movie knowledge!</p>
+                    
+                    <div class="quiz-container" id="movieQuoteGame">
+                        <div class="quiz-question" id="quoteQuestion">Quote will appear here</div>
+                        
+                        <div class="quiz-options" id="quoteOptions">
+                            <!-- Options will be generated by JavaScript -->
+                        </div>
+                        
+                        <div class="game-controls">
+                            <div id="quoteProgress">Quote 1 of 4</div>
+                            <button class="btn btn-preview" id="nextQuoteBtn">Next Quote</button>
+                        </div>
+                        
+                        <div class="quiz-result" id="quoteResult">
+                            <!-- Result will be shown here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-meta">
+                        <div class="game-difficulty">Easy</div>
+                        <button class="game-shuffle-btn" onclick="shuffleCelebrityGame()">
+                            <i class="fas fa-random"></i> New Game
+                        </button>
+                    </div>
+                    <h3>Celebrity Match Game</h3>
+                    <p>Match the celebrity with their profession or notable work. How many can you get right?</p>
+                    
+                    <div class="quiz-container" id="celebrityGame">
+                        <div class="quiz-question" id="celebrityQuestion">Celebrity will appear here</div>
+                        
+                        <div class="quiz-options" id="celebrityOptions">
+                            <!-- Options will be generated by JavaScript -->
+                        </div>
+                        
+                        <div class="game-controls">
+                            <div id="celebrityProgress">Match 1 of 4</div>
+                            <button class="btn btn-preview" id="nextCelebrityBtn">Next Match</button>
+                        </div>
+                        
+                        <div class="quiz-result" id="celebrityResult">
                             <!-- Result will be shown here -->
                         </div>
                     </div>
@@ -1161,10 +1640,740 @@
             </div>
         </div>
     </footer>
-
+ </div>
     <!-- JavaScript -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
+    // Add this to your existing JavaScript, preferably at the beginning of the DOMContentLoaded event
+
+// Loader functionality
+function initializeLoader() {
+    const loader = document.getElementById('siteLoader');
+    const loaderProgress = document.getElementById('loaderProgress');
+    const loaderText = document.getElementById('loaderText');
+    const moviesCount = document.getElementById('moviesCount');
+    const musicCount = document.getElementById('musicCount');
+    const gamesCount = document.getElementById('gamesCount');
+    
+    // Update content counts
+    moviesCount.textContent = allMovies.length;
+    musicCount.textContent = allMusic.length;
+    gamesCount.textContent = 4; // 4 different games
+    
+    // Simulate loading progress
+    let progress = 0;
+    const loadingMessages = [
+        "Loading Movies Database...",
+        "Loading Music Collection...",
+        "Initializing Games...",
+        "Preparing Content...",
+        "Almost Ready..."
+    ];
+    
+    const progressInterval = setInterval(() => {
+        progress += 5 + Math.random() * 10;
+        
+        if (progress > 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+            
+            // Final loading message
+            loaderText.textContent = "Welcome to CNMediaHub!";
+            
+            // Hide loader after delay
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                
+                // Optional: Remove loader from DOM after animation
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 800);
+        }
+        
+        // Update progress bar
+        loaderProgress.style.width = `${progress}%`;
+        
+        // Update loading messages at certain progress points
+        if (progress < 20) {
+            loaderText.textContent = loadingMessages[0];
+        } else if (progress < 40) {
+            loaderText.textContent = loadingMessages[1];
+        } else if (progress < 60) {
+            loaderText.textContent = loadingMessages[2];
+        } else if (progress < 80) {
+            loaderText.textContent = loadingMessages[3];
+        } else if (progress < 100) {
+            loaderText.textContent = loadingMessages[4];
+        }
+        
+    }, 150); // Update every 150ms
+}
+
+// Initialize loader when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Start loader
+    initializeLoader();
+    
+    // Then initialize your other content
+    initializeRandomContent();
+    
+    // Rest of your existing initialization code...
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('mainNav').classList.toggle('active');
+    });
+    
+    // ... rest of your existing code
+});
+        // Expanded content databases
+        const allMovies = [
+            { 
+                id: 1, 
+                title: "African Giant", 
+                description: "A thrilling drama about a young man's rise to power", 
+                duration: "2h 15m", 
+                year: "2023",
+                region: "Nollywood",
+                genre: "Drama",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/african-giant-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/african-giant-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/african-giant-4k.mp4" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "City Lights", 
+                description: "Romantic comedy set in the heart of Lagos", 
+                duration: "1h 48m", 
+                year: "2023",
+                region: "Nollywood",
+                genre: "Romance",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                image: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/city-lights-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/city-lights-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/city-lights-4k.mp4" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "The Last Warrior", 
+                description: "Epic action film with stunning visuals", 
+                duration: "2h 30m", 
+                year: "2022",
+                region: "Hollywood",
+                genre: "Action",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/last-warrior-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/last-warrior-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/last-warrior-4k.mp4" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Voices of Freedom", 
+                description: "Historical drama about Nigeria's independence", 
+                duration: "2h 5m", 
+                year: "2023",
+                region: "Nollywood",
+                genre: "Drama",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/voices-freedom-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/voices-freedom-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/voices-freedom-4k.mp4" }
+                ]
+            },
+            { 
+                id: 5, 
+                title: "Bollywood Dreams", 
+                description: "Colorful musical romance from India", 
+                duration: "2h 45m", 
+                year: "2022",
+                region: "Bollywood",
+                genre: "Romance",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                image: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/bollywood-dreams-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/bollywood-dreams-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/bollywood-dreams-4k.mp4" }
+                ]
+            },
+            { 
+                id: 6, 
+                title: "Tokyo Nights", 
+                description: "Neon-lit thriller in futuristic Tokyo", 
+                duration: "1h 55m", 
+                year: "2023",
+                region: "Asian",
+                genre: "Thriller",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                image: "https://images.unsplash.com/photo-1540224871915-bc8ffb782bdf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/tokyo-nights-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/tokyo-nights-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/tokyo-nights-4k.mp4" }
+                ]
+            },
+            { 
+                id: 7, 
+                title: "Paris Connection", 
+                description: "Espionage thriller set in Paris", 
+                duration: "2h 10m", 
+                year: "2023",
+                region: "European",
+                genre: "Thriller",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+                image: "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/paris-connection-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/paris-connection-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/paris-connection-4k.mp4" }
+                ]
+            },
+            { 
+                id: 8, 
+                title: "Safari Kings", 
+                description: "Wildlife adventure in the African savannah", 
+                duration: "1h 50m", 
+                year: "2022",
+                region: "African",
+                genre: "Adventure",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                image: "https://images.unsplash.com/photo-1518834103328-93d45986dce1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/safari-kings-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/safari-kings-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/safari-kings-4k.mp4" }
+                ]
+            },
+            { 
+                id: 9, 
+                title: "Cosmic Journey", 
+                description: "Sci-fi adventure across the galaxy", 
+                duration: "2h 25m", 
+                year: "2023",
+                region: "Hollywood",
+                genre: "Sci-Fi",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/cosmic-journey-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/cosmic-journey-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/cosmic-journey-4k.mp4" }
+                ]
+            },
+            { 
+                id: 10, 
+                title: "Laugh Out Loud", 
+                description: "Hilarious comedy with all-star cast", 
+                duration: "1h 40m", 
+                year: "2023",
+                region: "Nollywood",
+                genre: "Comedy",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTI.mp4",
+                image: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/laugh-out-loud-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/laugh-out-loud-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/laugh-out-loud-4k.mp4" }
+                ]
+            }
+        ];
+        
+        const allMusic = [
+            { 
+                id: 1, 
+                title: "Afrobeat Vibes", 
+                artist: "Burna Boy", 
+                genre: "Afrobeat", 
+                duration: "3:45",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/afrobeat-vibes.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/afrobeat-vibes.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/afrobeat-vibes.flac" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "Love in Lagos", 
+                artist: "Tiwa Savage", 
+                genre: "R&B", 
+                duration: "4:12",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/love-lagos.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/love-lagos.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/love-lagos.flac" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "Street Anthem", 
+                artist: "Olamide", 
+                genre: "Hip Hop", 
+                duration: "3:20",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/street-anthem.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/street-anthem.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/street-anthem.flac" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Spiritual Journey", 
+                artist: "Asake", 
+                genre: "Afro-Fusion", 
+                duration: "3:58",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/spiritual-journey.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/spiritual-journey.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/spiritual-journey.flac" }
+                ]
+            },
+            { 
+                id: 5, 
+                title: "Dancehall Queen", 
+                artist: "Shatta Wale", 
+                genre: "Reggae", 
+                duration: "3:30",
+                region: "Ghana",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/dancehall-queen.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/dancehall-queen.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/dancehall-queen.flac" }
+                ]
+            },
+            { 
+                id: 6, 
+                title: "Gospel Praise", 
+                artist: "Moses Bliss", 
+                genre: "Gospel", 
+                duration: "4:45",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/gospel-praise.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/gospel-praise.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/gospel-praise.flac" }
+                ]
+            },
+            { 
+                id: 7, 
+                title: "Pop Sensation", 
+                artist: "Rema", 
+                genre: "Pop", 
+                duration: "3:15",
+                region: "Nigeria",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/pop-sensation.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/pop-sensation.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/pop-sensation.flac" }
+                ]
+            },
+            { 
+                id: 8, 
+                title: "Amapiano Groove", 
+                artist: "Kabza De Small", 
+                genre: "Amapiano", 
+                duration: "5:20",
+                region: "South Africa",
+                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "MP3", url: "https://example.com/download/amapiano-groove.mp3" },
+                    { quality: "WAV", url: "https://example.com/download/amapiano-groove.wav" },
+                    { quality: "FLAC", url: "https://example.com/download/amapiano-groove.flac" }
+                ]
+            }
+        ];
+        
+        const allActions = [
+            { 
+                id: 1, 
+                title: "Extreme Parkour", 
+                description: "Mind-blowing parkour stunts across urban landscapes", 
+                duration: "12:45",
+                type: "Parkour",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/extreme-parkour-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/extreme-parkour-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/extreme-parkour-4k.mp4" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "MMA Highlights", 
+                description: "Best MMA fights and techniques compilation", 
+                duration: "18:30",
+                type: "MMA",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/mma-highlights-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/mma-highlights-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/mma-highlights-4k.mp4" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "Adventure Travel", 
+                description: "Extreme adventure travel across Africa", 
+                duration: "22:15",
+                type: "Adventure",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+                image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/adventure-travel-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/adventure-travel-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/adventure-travel-4k.mp4" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Street Workout", 
+                description: "Incredible calisthenics and street workout routines", 
+                duration: "15:20",
+                type: "Sports",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                image: "https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/street-workout-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/street-workout-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/street-workout-4k.mp4" }
+                ]
+            },
+            { 
+                id: 5, 
+                title: "Motocross Madness", 
+                description: "Extreme motocross stunts and races", 
+                duration: "14:30",
+                type: "Sports",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/motocross-madness-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/motocross-madness-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/motocross-madness-4k.mp4" }
+                ]
+            },
+            { 
+                id: 6, 
+                title: "Boxing Legends", 
+                description: "Greatest boxing moments and knockouts", 
+                duration: "20:15",
+                type: "Sports",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/boxing-legends-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/boxing-legends-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/boxing-legends-4k.mp4" }
+                ]
+            },
+            { 
+                id: 7, 
+                title: "Stunt Masters", 
+                description: "Hollywood level stunts and effects", 
+                duration: "16:45",
+                type: "Stunts",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+                image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/stunt-masters-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/stunt-masters-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/stunt-masters-4k.mp4" }
+                ]
+            },
+            { 
+                id: 8, 
+                title: "Skateboarding Extreme", 
+                description: "Professional skateboarding tricks and competitions", 
+                duration: "13:20",
+                type: "Sports",
+                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                image: "https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                downloadLinks: [
+                    { quality: "720p", url: "https://example.com/download/skateboarding-extreme-720p.mp4" },
+                    { quality: "1080p", url: "https://example.com/download/skateboarding-extreme-1080p.mp4" },
+                    { quality: "4K", url: "https://example.com/download/skateboarding-extreme-4k.mp4" }
+                ]
+            }
+        ];
+        
+        // Expanded quiz questions database
+        const allQuizQuestions = [
+            {
+                question: "Which Nigerian singer is known as the 'African Giant'?",
+                options: ["Wizkid", "Burna Boy", "Davido", "Olamide"],
+                correct: 1,
+                category: "Music"
+            },
+            {
+                question: "In which year did Nigeria gain independence?",
+                options: ["1957", "1960", "1963", "1970"],
+                correct: 1,
+                category: "History"
+            },
+            {
+                question: "Which of these is NOT a Nollywood film genre?",
+                options: ["Epic", "Rom-com", "Kannywood", "Thriller"],
+                correct: 2,
+                category: "Movies"
+            },
+            {
+                question: "Who is known as the 'Queen of Afrobeats'?",
+                options: ["Tiwa Savage", "Yemi Alade", "Simi", "Niniola"],
+                correct: 0,
+                category: "Music"
+            },
+            {
+                question: "Which movie holds the record for highest-grossing Nollywood film?",
+                options: ["The Wedding Party", "Omo Ghetto: The Saga", "King of Boys", "Living in Bondage"],
+                correct: 1,
+                category: "Movies"
+            },
+            {
+                question: "Which African country is known as the 'Pearl of Africa'?",
+                options: ["Kenya", "Uganda", "Ghana", "Tanzania"],
+                correct: 1,
+                category: "Geography"
+            },
+            {
+                question: "Who directed the movie 'Black Panther'?",
+                options: ["Ryan Coogler", "Steven Spielberg", "Ava DuVernay", "Spike Lee"],
+                correct: 0,
+                category: "Movies"
+            },
+            {
+                question: "Which instrument is Fela Kuti famous for playing?",
+                options: ["Saxophone", "Guitar", "Piano", "Drums"],
+                correct: 0,
+                category: "Music"
+            },
+            {
+                question: "What is the capital city of Ghana?",
+                options: ["Lagos", "Accra", "Nairobi", "Cairo"],
+                correct: 1,
+                category: "Geography"
+            },
+            {
+                question: "Which Nigerian actor starred in 'The Wedding Party'?",
+                options: ["Richard Mofe-Damijo", "Banky Wellington", "Jim Iyke", "Ramsey Nouah"],
+                correct: 1,
+                category: "Movies"
+            },
+            {
+                question: "Who sang 'Fall' which went viral on TikTok?",
+                options: ["Wizkid", "Davido", "Burna Boy", "Mr Eazi"],
+                correct: 1,
+                category: "Music"
+            },
+            {
+                question: "Which streaming platform originated in Nigeria?",
+                options: ["Netflix", "Showmax", "IROKOtv", "Amazon Prime"],
+                correct: 2,
+                category: "Entertainment"
+            }
+        ];
+        
+        // Movie Quote Game Database
+        const movieQuotes = [
+            {
+                quote: "I'm going to make him an offer he can't refuse.",
+                options: ["The Godfather", "Scarface", "Goodfellas", "Casino"],
+                correct: 0,
+                movie: "The Godfather"
+            },
+            {
+                quote: "May the Force be with you.",
+                options: ["Star Wars", "Star Trek", "Guardians of the Galaxy", "The Avengers"],
+                correct: 0,
+                movie: "Star Wars"
+            },
+            {
+                quote: "You talking to me?",
+                options: ["Taxi Driver", "Raging Bull", "Goodfellas", "The Departed"],
+                correct: 0,
+                movie: "Taxi Driver"
+            },
+            {
+                quote: "I'll be back.",
+                options: ["Terminator", "Predator", "RoboCop", "Total Recall"],
+                correct: 0,
+                movie: "Terminator"
+            },
+            {
+                quote: "Life is like a box of chocolates.",
+                options: ["Forrest Gump", "The Green Mile", "Cast Away", "Saving Private Ryan"],
+                correct: 0,
+                movie: "Forrest Gump"
+            },
+            {
+                quote: "Why so serious?",
+                options: ["The Dark Knight", "Batman Begins", "Joker", "Suicide Squad"],
+                correct: 0,
+                movie: "The Dark Knight"
+            },
+            {
+                quote: "I see dead people.",
+                options: ["The Sixth Sense", "The Others", "The Ring", "Poltergeist"],
+                correct: 0,
+                movie: "The Sixth Sense"
+            },
+            {
+                quote: "You can't handle the truth!",
+                options: ["A Few Good Men", "The Firm", "Philadelphia", "Rain Man"],
+                correct: 0,
+                movie: "A Few Good Men"
+            }
+        ];
+        
+        // Celebrity Match Game Database
+        const celebrities = [
+            {
+                name: "Burna Boy",
+                options: ["Musician - African Giant", "Actor - Black Panther", "Director - The Woman King", "Comedian - Chief Daddy"],
+                correct: 0,
+                profession: "Musician"
+            },
+            {
+                name: "Genevieve Nnaji",
+                options: ["Actress - Lionheart", "Musician - Fall", "Director - The Wedding Party", "Producer - King of Boys"],
+                correct: 0,
+                profession: "Actress"
+            },
+            {
+                name: "Kunle Afolayan",
+                options: ["Director - October 1", "Actor - The Figurine", "Musician - Jehovah", "Producer - Living in Bondage"],
+                correct: 0,
+                profession: "Director"
+            },
+            {
+                name: "Chimamanda Ngozi Adichie",
+                options: ["Author - Half of a Yellow Sun", "Actress - 93 Days", "Musician - Purple Hibiscus", "Director - Americanah"],
+                correct: 0,
+                profession: "Author"
+            },
+            {
+                name: "Davido",
+                options: ["Musician - Fall", "Actor - Coming to America", "Director - Juju Stories", "Producer - The CEO"],
+                correct: 0,
+                profession: "Musician"
+            },
+            {
+                name: "Funke Akindele",
+                options: ["Actress - Jenifa's Diary", "Musician - Omo Ghetto", "Director - The Wedding Party", "Author - Your Excellency"],
+                correct: 0,
+                profession: "Actress"
+            },
+            {
+                name: "Banky W",
+                options: ["Musician/Actor - The Wedding Party", "Director - Up North", "Producer - Sugar Rush", "Author - Make We Dey Go"],
+                correct: 0,
+                profession: "Musician/Actor"
+            },
+            {
+                name: "Mo Abudu",
+                options: ["Media Mogul - EbonyLife TV", "Actress - The Royal Hibiscus Hotel", "Musician - The CEO", "Director - Your Excellency"],
+                correct: 0,
+                profession: "Media Mogul"
+            }
+        ];
+        
+        // Music Game Database
+        const musicGameTracks = [
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                options: ["Burna Boy - Afrobeat Vibes", "Wizkid - Essence", "Davido - Fall", "Olamide - Wo"],
+                correct: 0,
+                artist: "Burna Boy"
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                options: ["Tiwa Savage - Love in Lagos", "Yemi Alade - Johnny", "Simi - Duduke", "Niniola - Maradona"],
+                correct: 0,
+                artist: "Tiwa Savage"
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                options: ["Olamide - Street Anthem", "Phyno - Connect", "Falz - Bop Daddy", "M.I Abaga - You Rappers Should Fix Up Your Lives"],
+                correct: 0,
+                artist: "Olamide"
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                options: ["Asake - Spiritual Journey", "Rema - Calm Down", "Fireboy - Peru", "Omah Lay - Godly"],
+                correct: 0,
+                artist: "Asake"
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+                options: ["Shatta Wale - Dancehall Queen", "Stonebwoy - Nominate", "Sarkodie - Adonai", "Shatta Wale - My Level"],
+                correct: 0,
+                artist: "Shatta Wale"
+            },
+            {
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+                options: ["Moses Bliss - Gospel Praise", "Nathaniel Bassey - Onise Iyanu", "Mercy Chinwo - Excess Love", "Frank Edwards - Okaka"],
+                correct: 0,
+                artist: "Moses Bliss"
+            }
+        ];
+        
+        // Current displayed content (random subsets)
+        let currentMovies = [];
+        let currentMusic = [];
+        let currentActions = [];
+        let currentQuizQuestions = [];
+        let currentMovieQuotes = [];
+        let currentCelebrities = [];
+        let currentMusicTracks = [];
+        
+        // Game state variables
+        let currentQuestion = 0;
+        let quizScore = 0;
+        let userAnswers = [];
+        
+        let currentTrack = 0;
+        let musicGameScore = 0;
+        let musicUserAnswers = [];
+        
+        let currentQuote = 0;
+        let quoteScore = 0;
+        let quoteUserAnswers = [];
+        
+        let currentCelebrity = 0;
+        let celebrityScore = 0;
+        let celebrityUserAnswers = [];
+        
         // Mobile menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mainNav').classList.toggle('active');
@@ -1182,239 +2391,180 @@
             });
         });
         
-        // Sample data for movies, music, and action content with actual video/image URLs
-        const movies = [
-            { 
-                id: 1, 
-                title: "African Giant", 
-                description: "A thrilling drama about a young man's rise to power", 
-                duration: "2h 15m", 
-                year: "2023",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/african-giant-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/african-giant-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/african-giant-4k.mp4" }
-                ]
-            },
-            { 
-                id: 2, 
-                title: "City Lights", 
-                description: "Romantic comedy set in the heart of Lagos", 
-                duration: "1h 48m", 
-                year: "2023",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                image: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/city-lights-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/city-lights-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/city-lights-4k.mp4" }
-                ]
-            },
-            { 
-                id: 3, 
-                title: "The Last Warrior", 
-                description: "Epic action film with stunning visuals", 
-                duration: "2h 30m", 
-                year: "2022",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/last-warrior-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/last-warrior-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/last-warrior-4k.mp4" }
-                ]
-            },
-            { 
-                id: 4, 
-                title: "Voices of Freedom", 
-                description: "Historical drama about Nigeria's independence", 
-                duration: "2h 5m", 
-                year: "2023",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/voices-freedom-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/voices-freedom-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/voices-freedom-4k.mp4" }
-                ]
-            }
-        ];
+        // Function to get random subset from array
+        function getRandomSubset(array, count) {
+            const shuffled = [...array].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
         
-        const music = [
-            { 
-                id: 1, 
-                title: "Afrobeat Vibes", 
-                artist: "Burna Boy", 
-                genre: "Afrobeat", 
-                duration: "3:45",
-                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "MP3", url: "https://example.com/download/afrobeat-vibes.mp3" },
-                    { quality: "WAV", url: "https://example.com/download/afrobeat-vibes.wav" },
-                    { quality: "FLAC", url: "https://example.com/download/afrobeat-vibes.flac" }
-                ]
-            },
-            { 
-                id: 2, 
-                title: "Love in Lagos", 
-                artist: "Tiwa Savage", 
-                genre: "R&B/Pop", 
-                duration: "4:12",
-                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-                image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "MP3", url: "https://example.com/download/love-lagos.mp3" },
-                    { quality: "WAV", url: "https://example.com/download/love-lagos.wav" },
-                    { quality: "FLAC", url: "https://example.com/download/love-lagos.flac" }
-                ]
-            },
-            { 
-                id: 3, 
-                title: "Street Anthem", 
-                artist: "Olamide", 
-                genre: "Hip Hop", 
-                duration: "3:20",
-                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-                image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "MP3", url: "https://example.com/download/street-anthem.mp3" },
-                    { quality: "WAV", url: "https://example.com/download/street-anthem.wav" },
-                    { quality: "FLAC", url: "https://example.com/download/street-anthem.flac" }
-                ]
-            },
-            { 
-                id: 4, 
-                title: "Spiritual Journey", 
-                artist: "Asake", 
-                genre: "Afro-Fusion", 
-                duration: "3:58",
-                previewAudio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "MP3", url: "https://example.com/download/spiritual-journey.mp3" },
-                    { quality: "WAV", url: "https://example.com/download/spiritual-journey.wav" },
-                    { quality: "FLAC", url: "https://example.com/download/spiritual-journey.flac" }
-                ]
-            }
-        ];
+        // Initialize with random content
+        function initializeRandomContent() {
+            currentMovies = getRandomSubset(allMovies, 4);
+            currentMusic = getRandomSubset(allMusic, 4);
+            currentActions = getRandomSubset(allActions, 4);
+            currentQuizQuestions = getRandomSubset(allQuizQuestions, 5);
+            currentMovieQuotes = getRandomSubset(movieQuotes, 4);
+            currentCelebrities = getRandomSubset(celebrities, 4);
+            currentMusicTracks = getRandomSubset(musicGameTracks, 3);
+            
+            generateMovieCards();
+            generateMusicCards();
+            generateActionCards();
+            loadQuestion();
+            loadMusicTrack();
+            loadMovieQuote();
+            loadCelebrityMatch();
+            
+            // Update counters
+            document.getElementById('movieCounter').textContent = `Showing 4 of ${allMovies.length} movies`;
+        }
         
-        const actions = [
-            { 
-                id: 1, 
-                title: "Extreme Parkour", 
-                description: "Mind-blowing parkour stunts across urban landscapes", 
-                duration: "12:45",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/extreme-parkour-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/extreme-parkour-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/extreme-parkour-4k.mp4" }
-                ]
-            },
-            { 
-                id: 2, 
-                title: "MMA Highlights", 
-                description: "Best MMA fights and techniques compilation", 
-                duration: "18:30",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/mma-highlights-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/mma-highlights-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/mma-highlights-4k.mp4" }
-                ]
-            },
-            { 
-                id: 3, 
-                title: "Adventure Travel", 
-                description: "Extreme adventure travel across Africa", 
-                duration: "22:15",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-                image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/adventure-travel-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/adventure-travel-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/adventure-travel-4k.mp4" }
-                ]
-            },
-            { 
-                id: 4, 
-                title: "Street Workout", 
-                description: "Incredible calisthenics and street workout routines", 
-                duration: "15:20",
-                previewVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-                image: "https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                downloadLinks: [
-                    { quality: "720p", url: "https://example.com/download/street-workout-720p.mp4" },
-                    { quality: "1080p", url: "https://example.com/download/street-workout-1080p.mp4" },
-                    { quality: "4K", url: "https://example.com/download/street-workout-4k.mp4" }
-                ]
-            }
-        ];
+        // Shuffle movies
+        function shuffleMovies() {
+            currentMovies = getRandomSubset(allMovies, 4);
+            generateMovieCards();
+            document.getElementById('movieCounter').textContent = `Showing 4 of ${allMovies.length} movies`;
+            
+            // Show shuffle animation
+            const movieGrid = document.getElementById('moviesGrid');
+            movieGrid.style.opacity = '0.5';
+            setTimeout(() => {
+                movieGrid.style.opacity = '1';
+            }, 300);
+        }
         
-        // Quiz questions
-        const quizQuestions = [
-            {
-                question: "Which Nigerian singer is known as the 'African Giant'?",
-                options: ["Wizkid", "Burna Boy", "Davido", "Olamide"],
-                correct: 1
-            },
-            {
-                question: "In which year did Nigeria gain independence?",
-                options: ["1957", "1960", "1963", "1970"],
-                correct: 1
-            },
-            {
-                question: "Which of these is NOT a Nollywood film genre?",
-                options: ["Epic", "Rom-com", "Kannywood", "Thriller"],
-                correct: 2
-            },
-            {
-                question: "Who is known as the 'Queen of Afrobeats'?",
-                options: ["Tiwa Savage", "Yemi Alade", "Simi", "Niniola"],
-                correct: 0
-            },
-            {
-                question: "Which movie holds the record for highest-grossing Nollywood film?",
-                options: ["The Wedding Party", "Omo Ghetto: The Saga", "King of Boys", "Living in Bondage"],
-                correct: 1
-            }
-        ];
+        // Shuffle music
+        function shuffleMusic() {
+            currentMusic = getRandomSubset(allMusic, 4);
+            generateMusicCards();
+        }
         
-        // Music Game Data
-        const musicGameTracks = [
-            {
-                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                options: ["Burna Boy - Afrobeat Vibes", "Wizkid - Essence", "Davido - Fall", "Olamide - Wo"],
-                correct: 0
-            },
-            {
-                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-                options: ["Tiwa Savage - Love in Lagos", "Yemi Alade - Johnny", "Simi - Duduke", "Niniola - Maradona"],
-                correct: 0
-            },
-            {
-                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-                options: ["Olamide - Street Anthem", "Phyno - Connect", "Falz - Bop Daddy", "M.I Abaga - You Rappers Should Fix Up Your Lives"],
-                correct: 0
+        // Shuffle action
+        function shuffleAction() {
+            currentActions = getRandomSubset(allActions, 4);
+            generateActionCards();
+        }
+        
+        // Shuffle quiz
+        function shuffleQuiz() {
+            currentQuizQuestions = getRandomSubset(allQuizQuestions, 5);
+            currentQuestion = 0;
+            quizScore = 0;
+            userAnswers = [];
+            loadQuestion();
+        }
+        
+        // Shuffle music game
+        function shuffleMusicGame() {
+            currentMusicTracks = getRandomSubset(musicGameTracks, 3);
+            currentTrack = 0;
+            musicGameScore = 0;
+            musicUserAnswers = [];
+            loadMusicTrack();
+        }
+        
+        // Shuffle movie quote game
+        function shuffleMovieGuess() {
+            currentMovieQuotes = getRandomSubset(movieQuotes, 4);
+            currentQuote = 0;
+            quoteScore = 0;
+            quoteUserAnswers = [];
+            loadMovieQuote();
+        }
+        
+        // Shuffle celebrity game
+        function shuffleCelebrityGame() {
+            currentCelebrities = getRandomSubset(celebrities, 4);
+            currentCelebrity = 0;
+            celebrityScore = 0;
+            celebrityUserAnswers = [];
+            loadCelebrityMatch();
+        }
+        
+        // Search and filter functions
+        function filterMovies() {
+            const searchTerm = document.getElementById('movieSearch').value.toLowerCase();
+            const regionFilter = document.getElementById('movieRegion').value;
+            const genreFilter = document.getElementById('movieGenre').value;
+            
+            let filtered = allMovies;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(movie => 
+                    movie.title.toLowerCase().includes(searchTerm) ||
+                    movie.description.toLowerCase().includes(searchTerm) ||
+                    movie.genre.toLowerCase().includes(searchTerm)
+                );
             }
-        ];
+            
+            if (regionFilter) {
+                filtered = filtered.filter(movie => movie.region === regionFilter);
+            }
+            
+            if (genreFilter) {
+                filtered = filtered.filter(movie => movie.genre === genreFilter);
+            }
+            
+            currentMovies = filtered.slice(0, 8); // Show up to 8 results
+            generateMovieCards();
+            document.getElementById('movieCounter').textContent = `Showing ${currentMovies.length} of ${allMovies.length} movies`;
+        }
+        
+        function filterMusic() {
+            const searchTerm = document.getElementById('musicSearch').value.toLowerCase();
+            const genreFilter = document.getElementById('musicGenre').value;
+            
+            let filtered = allMusic;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(song => 
+                    song.title.toLowerCase().includes(searchTerm) ||
+                    song.artist.toLowerCase().includes(searchTerm) ||
+                    song.genre.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (genreFilter) {
+                filtered = filtered.filter(song => song.genre === genreFilter);
+            }
+            
+            currentMusic = filtered.slice(0, 8);
+            generateMusicCards();
+        }
+        
+        function filterAction() {
+            const searchTerm = document.getElementById('actionSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('actionType').value;
+            
+            let filtered = allActions;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(action => 
+                    action.title.toLowerCase().includes(searchTerm) ||
+                    action.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (typeFilter) {
+                filtered = filtered.filter(action => action.type === typeFilter);
+            }
+            
+            currentActions = filtered.slice(0, 8);
+            generateActionCards();
+        }
         
         // Generate movie cards
         function generateMovieCards() {
             const movieGrid = document.getElementById('moviesGrid');
             movieGrid.innerHTML = '';
             
-            movies.forEach(movie => {
+            currentMovies.forEach(movie => {
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
                     <div class="card-image">
                         <img src="${movie.image}" alt="${movie.title}">
+                        <div class="card-badge">${movie.region}</div>
                         <h3>${movie.title}</h3>
                         <div class="play-btn" onclick="openVideoModal('${movie.previewVideo}', '${movie.title}', ${JSON.stringify(movie.downloadLinks).replace(/"/g, '&quot;')})">
                             <i class="fas fa-play"></i>
@@ -1423,10 +2573,14 @@
                     <div class="card-content">
                         <h4>${movie.title}</h4>
                         <p>${movie.description}</p>
-                        <p><strong>Duration:</strong> ${movie.duration} | <strong>Year:</strong> ${movie.year}</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-clock"></i> ${movie.duration}</span>
+                            <span><i class="fas fa-calendar"></i> ${movie.year}</span>
+                            <span><i class="fas fa-film"></i> ${movie.genre}</span>
+                        </div>
                         <div class="card-actions">
                             <button class="btn btn-preview" onclick="openVideoModal('${movie.previewVideo}', '${movie.title}', ${JSON.stringify(movie.downloadLinks).replace(/"/g, '&quot;')})">Watch Preview</button>
-                            <a href="https://wa.me/256779185824?text=Hi%20PulseHub%2C%20I%20want%20to%20order%20the%20movie%20titled:%20${encodeURIComponent(movie.title)}" class="btn btn-whatsapp" target="_blank">
+                            <a href="https://wa.me/256779185824?text=Hi%20CNMediaHub%2C%20I%20want%20to%20order%20the%20movie%20titled:%20${encodeURIComponent(movie.title)}%20(${movie.year})" class="btn btn-whatsapp" target="_blank">
                                 <i class="fab fa-whatsapp"></i> Order
                             </a>
                         </div>
@@ -1441,12 +2595,13 @@
             const musicGrid = document.getElementById('musicGrid');
             musicGrid.innerHTML = '';
             
-            music.forEach(song => {
+            currentMusic.forEach(song => {
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
                     <div class="card-image">
                         <img src="${song.image}" alt="${song.title}">
+                        <div class="card-badge">${song.region}</div>
                         <h3>${song.title}</h3>
                         <div class="play-btn" onclick="openAudioModal('${song.previewAudio}', '${song.title} by ${song.artist}', ${JSON.stringify(song.downloadLinks).replace(/"/g, '&quot;')})">
                             <i class="fas fa-play"></i>
@@ -1455,7 +2610,11 @@
                     <div class="card-content">
                         <h4>${song.title}</h4>
                         <p><strong>Artist:</strong> ${song.artist}</p>
-                        <p><strong>Genre:</strong> ${song.genre} | <strong>Duration:</strong> ${song.duration}</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-clock"></i> ${song.duration}</span>
+                            <span><i class="fas fa-music"></i> ${song.genre}</span>
+                            <span><i class="fas fa-globe"></i> ${song.region}</span>
+                        </div>
                         <div class="card-actions">
                             <button class="btn btn-preview" onclick="openAudioModal('${song.previewAudio}', '${song.title} by ${song.artist}', ${JSON.stringify(song.downloadLinks).replace(/"/g, '&quot;')})">Listen Preview</button>
                             <a href="https://wa.me/256779185824?text=Hi%20CNMediaHub%2C%20I%20want%20to%20order%20the%20song%20titled:%20${encodeURIComponent(song.title + ' by ' + song.artist)}" class="btn btn-whatsapp" target="_blank">
@@ -1473,12 +2632,13 @@
             const actionGrid = document.getElementById('actionGrid');
             actionGrid.innerHTML = '';
             
-            actions.forEach(action => {
+            currentActions.forEach(action => {
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
                     <div class="card-image">
                         <img src="${action.image}" alt="${action.title}">
+                        <div class="card-badge">${action.type}</div>
                         <h3>${action.title}</h3>
                         <div class="play-btn" onclick="openVideoModal('${action.previewVideo}', '${action.title}', ${JSON.stringify(action.downloadLinks).replace(/"/g, '&quot;')})">
                             <i class="fas fa-play"></i>
@@ -1487,7 +2647,10 @@
                     <div class="card-content">
                         <h4>${action.title}</h4>
                         <p>${action.description}</p>
-                        <p><strong>Duration:</strong> ${action.duration}</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-clock"></i> ${action.duration}</span>
+                            <span><i class="fas fa-fire"></i> ${action.type}</span>
+                        </div>
                         <div class="card-actions">
                             <button class="btn btn-preview" onclick="openVideoModal('${action.previewVideo}', '${action.title}', ${JSON.stringify(action.downloadLinks).replace(/"/g, '&quot;')})">Watch Preview</button>
                             <a href="https://wa.me/256779185824?text=Hi%20CNMediaHub%2C%20I%20want%20to%20order%20the%20action%20content%20titled:%20${encodeURIComponent(action.title)}" class="btn btn-whatsapp" target="_blank">
@@ -1583,12 +2746,10 @@
         });
         
         // Quiz functionality
-        let currentQuestion = 0;
-        let quizScore = 0;
-        let userAnswers = [];
-        
         function loadQuestion() {
-            const question = quizQuestions[currentQuestion];
+            if (currentQuestion >= currentQuizQuestions.length) return;
+            
+            const question = currentQuizQuestions[currentQuestion];
             document.getElementById('quizQuestion').textContent = `Question ${currentQuestion + 1}: ${question.question}`;
             
             const optionsContainer = document.getElementById('quizOptions');
@@ -1614,11 +2775,11 @@
             });
             
             // Update progress
-            document.getElementById('quizProgress').textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+            document.getElementById('quizProgress').textContent = `Question ${currentQuestion + 1} of ${currentQuizQuestions.length}`;
             
             // Update next button text
             const nextBtn = document.getElementById('nextQuestionBtn');
-            if (currentQuestion === quizQuestions.length - 1) {
+            if (currentQuestion === currentQuizQuestions.length - 1) {
                 nextBtn.textContent = 'Finish Quiz';
             } else {
                 nextBtn.textContent = 'Next Question';
@@ -1633,9 +2794,9 @@
             resultElement.style.display = 'block';
             resultElement.innerHTML = `
                 <h3>Quiz Completed!</h3>
-                <p>Your score: ${quizScore} out of ${quizQuestions.length}</p>
-                <p>${quizScore === quizQuestions.length ? '🎉 Perfect! You\'re a true entertainment expert!' : 
-                    quizScore >= quizQuestions.length/2 ? '👍 Good job! You know your entertainment!' : 
+                <p>Your score: ${quizScore} out of ${currentQuizQuestions.length}</p>
+                <p>${quizScore === currentQuizQuestions.length ? '🎉 Perfect! You\'re a true entertainment expert!' : 
+                    quizScore >= currentQuizQuestions.length/2 ? '👍 Good job! You know your entertainment!' : 
                     '💪 Keep learning! Try again to improve your score!'}</p>
                 <button class="btn btn-preview" onclick="restartQuiz()" style="margin-top: 10px;">Play Again</button>
             `;
@@ -1649,12 +2810,10 @@
         }
         
         // Music Game functionality
-        let currentTrack = 0;
-        let musicGameScore = 0;
-        let musicUserAnswers = [];
-        
         function loadMusicTrack() {
-            const track = musicGameTracks[currentTrack];
+            if (currentTrack >= currentMusicTracks.length) return;
+            
+            const track = currentMusicTracks[currentTrack];
             const audioElement = document.getElementById('musicGameAudio');
             
             // Update audio source
@@ -1662,7 +2821,7 @@
             audioElement.load();
             
             // Update info
-            document.getElementById('musicGameInfo').textContent = `Track ${currentTrack + 1} of ${musicGameTracks.length}`;
+            document.getElementById('musicGameInfo').textContent = `Track ${currentTrack + 1} of ${currentMusicTracks.length}`;
             
             // Update options
             const optionsContainer = document.getElementById('musicOptions');
@@ -1697,11 +2856,11 @@
             });
             
             // Update score display
-            document.getElementById('musicGameScore').textContent = `Score: ${musicGameScore}/${musicGameTracks.length}`;
+            document.getElementById('musicGameScore').textContent = `Score: ${musicGameScore}/${currentMusicTracks.length}`;
             
             // Update next button text
             const nextBtn = document.getElementById('nextMusicTrackBtn');
-            if (currentTrack === musicGameTracks.length - 1) {
+            if (currentTrack === currentMusicTracks.length - 1) {
                 nextBtn.textContent = 'Finish Game';
             } else {
                 nextBtn.textContent = 'Next Track';
@@ -1716,9 +2875,9 @@
             resultElement.style.display = 'block';
             resultElement.innerHTML = `
                 <h3>Music Game Completed!</h3>
-                <p>Your score: ${musicGameScore} out of ${musicGameTracks.length}</p>
-                <p>${musicGameScore === musicGameTracks.length ? '🎉 Perfect Pitch! You know your music!' : 
-                    musicGameScore >= musicGameTracks.length/2 ? '👍 Good ear! You\'re a music lover!' : 
+                <p>Your score: ${musicGameScore} out of ${currentMusicTracks.length}</p>
+                <p>${musicGameScore === currentMusicTracks.length ? '🎉 Perfect Pitch! You know your music!' : 
+                    musicGameScore >= currentMusicTracks.length/2 ? '👍 Good ear! You\'re a music lover!' : 
                     '🎵 Keep listening! You\'ll improve with time!'}</p>
                 <button class="btn btn-preview" onclick="restartMusicGame()" style="margin-top: 10px;">Play Again</button>
             `;
@@ -1731,13 +2890,140 @@
             loadMusicTrack();
         }
         
+        // Movie Quote Game functionality
+        function loadMovieQuote() {
+            if (currentQuote >= currentMovieQuotes.length) return;
+            
+            const quote = currentMovieQuotes[currentQuote];
+            document.getElementById('quoteQuestion').textContent = `"${quote.quote}"`;
+            
+            const optionsContainer = document.getElementById('quoteOptions');
+            optionsContainer.innerHTML = '';
+            
+            quote.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('#quoteOptions .quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    quoteUserAnswers[currentQuote] = parseInt(this.dataset.index);
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update progress
+            document.getElementById('quoteProgress').textContent = `Quote ${currentQuote + 1} of ${currentMovieQuotes.length}`;
+            
+            // Update next button text
+            const nextBtn = document.getElementById('nextQuoteBtn');
+            if (currentQuote === currentMovieQuotes.length - 1) {
+                nextBtn.textContent = 'Finish Game';
+            } else {
+                nextBtn.textContent = 'Next Quote';
+            }
+            
+            // Hide result
+            document.getElementById('quoteResult').style.display = 'none';
+        }
+        
+        function showMovieQuoteResult() {
+            const resultElement = document.getElementById('quoteResult');
+            resultElement.style.display = 'block';
+            resultElement.innerHTML = `
+                <h3>Movie Quote Game Completed!</h3>
+                <p>Your score: ${quoteScore} out of ${currentMovieQuotes.length}</p>
+                <p>${quoteScore === currentMovieQuotes.length ? '🎉 Film Buff Extraordinaire!' : 
+                    quoteScore >= currentMovieQuotes.length/2 ? '👍 Great movie knowledge!' : 
+                    '🎬 Time for a movie marathon!'}</p>
+                <button class="btn btn-preview" onclick="restartMovieQuoteGame()" style="margin-top: 10px;">Play Again</button>
+            `;
+        }
+        
+        function restartMovieQuoteGame() {
+            currentQuote = 0;
+            quoteScore = 0;
+            quoteUserAnswers = [];
+            loadMovieQuote();
+        }
+        
+        // Celebrity Match Game functionality
+        function loadCelebrityMatch() {
+            if (currentCelebrity >= currentCelebrities.length) return;
+            
+            const celebrity = currentCelebrities[currentCelebrity];
+            document.getElementById('celebrityQuestion').textContent = `Who is ${celebrity.name}?`;
+            
+            const optionsContainer = document.getElementById('celebrityOptions');
+            optionsContainer.innerHTML = '';
+            
+            celebrity.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('#celebrityOptions .quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    celebrityUserAnswers[currentCelebrity] = parseInt(this.dataset.index);
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update progress
+            document.getElementById('celebrityProgress').textContent = `Match ${currentCelebrity + 1} of ${currentCelebrities.length}`;
+            
+            // Update next button text
+            const nextBtn = document.getElementById('nextCelebrityBtn');
+            if (currentCelebrity === currentCelebrities.length - 1) {
+                nextBtn.textContent = 'Finish Game';
+            } else {
+                nextBtn.textContent = 'Next Match';
+            }
+            
+            // Hide result
+            document.getElementById('celebrityResult').style.display = 'none';
+        }
+        
+        function showCelebrityMatchResult() {
+            const resultElement = document.getElementById('celebrityResult');
+            resultElement.style.display = 'block';
+            resultElement.innerHTML = `
+                <h3>Celebrity Match Game Completed!</h3>
+                <p>Your score: ${celebrityScore} out of ${currentCelebrities.length}</p>
+                <p>${celebrityScore === currentCelebrities.length ? '🎉 Entertainment Guru!' : 
+                    celebrityScore >= currentCelebrities.length/2 ? '👍 You know your celebrities!' : 
+                    '🌟 Brush up on your celebrity knowledge!'}</p>
+                <button class="btn btn-preview" onclick="restartCelebrityGame()" style="margin-top: 10px;">Play Again</button>
+            `;
+        }
+        
+        function restartCelebrityGame() {
+            currentCelebrity = 0;
+            celebrityScore = 0;
+            celebrityUserAnswers = [];
+            loadCelebrityMatch();
+        }
+        
         // Initialize content and games
         document.addEventListener('DOMContentLoaded', function() {
-            generateMovieCards();
-            generateMusicCards();
-            generateActionCards();
-            loadQuestion();
-            loadMusicTrack();
+            initializeRandomContent();
+            
+            // Auto-shuffle movies every 30 seconds
+            setInterval(shuffleMovies, 30000);
             
             // Handle next question button for quiz
             document.getElementById('nextQuestionBtn').addEventListener('click', function() {
@@ -1748,12 +3034,12 @@
                 }
                 
                 // Check if answer is correct
-                if (userAnswers[currentQuestion] === quizQuestions[currentQuestion].correct) {
+                if (userAnswers[currentQuestion] === currentQuizQuestions[currentQuestion].correct) {
                     quizScore++;
                 }
                 
                 // Move to next question or show result
-                if (currentQuestion < quizQuestions.length - 1) {
+                if (currentQuestion < currentQuizQuestions.length - 1) {
                     currentQuestion++;
                     loadQuestion();
                 } else {
@@ -1770,18 +3056,78 @@
                 }
                 
                 // Check if answer is correct
-                if (musicUserAnswers[currentTrack] === musicGameTracks[currentTrack].correct) {
+                if (musicUserAnswers[currentTrack] === currentMusicTracks[currentTrack].correct) {
                     musicGameScore++;
                 }
                 
                 // Move to next track or show result
-                if (currentTrack < musicGameTracks.length - 1) {
+                if (currentTrack < currentMusicTracks.length - 1) {
                     currentTrack++;
                     loadMusicTrack();
                 } else {
                     showMusicGameResult();
                 }
             });
+            
+            // Handle next quote button for movie quote game
+            document.getElementById('nextQuoteBtn').addEventListener('click', function() {
+                // Check if an option is selected
+                if (quoteUserAnswers[currentQuote] === undefined) {
+                    alert('Please select an answer before proceeding!');
+                    return;
+                }
+                
+                // Check if answer is correct
+                if (quoteUserAnswers[currentQuote] === currentMovieQuotes[currentQuote].correct) {
+                    quoteScore++;
+                }
+                
+                // Move to next quote or show result
+                if (currentQuote < currentMovieQuotes.length - 1) {
+                    currentQuote++;
+                    loadMovieQuote();
+                } else {
+                    showMovieQuoteResult();
+                }
+            });
+            
+            // Handle next celebrity button for celebrity game
+            document.getElementById('nextCelebrityBtn').addEventListener('click', function() {
+                // Check if an option is selected
+                if (celebrityUserAnswers[currentCelebrity] === undefined) {
+                    alert('Please select an answer before proceeding!');
+                    return;
+                }
+                
+                // Check if answer is correct
+                if (celebrityUserAnswers[currentCelebrity] === currentCelebrities[currentCelebrity].correct) {
+                    celebrityScore++;
+                }
+                
+                // Move to next celebrity or show result
+                if (currentCelebrity < currentCelebrities.length - 1) {
+                    currentCelebrity++;
+                    loadCelebrityMatch();
+                } else {
+                    showCelebrityMatchResult();
+                }
+            });
+            
+            // Add event listeners for shuffle buttons
+            document.getElementById('shuffleMovies').addEventListener('click', shuffleMovies);
+            document.getElementById('shuffleMusic').addEventListener('click', shuffleMusic);
+            document.getElementById('shuffleAction').addEventListener('click', shuffleAction);
+            
+            // Add event listeners for search and filter
+            document.getElementById('movieSearch').addEventListener('input', filterMovies);
+            document.getElementById('movieRegion').addEventListener('change', filterMovies);
+            document.getElementById('movieGenre').addEventListener('change', filterMovies);
+            
+            document.getElementById('musicSearch').addEventListener('input', filterMusic);
+            document.getElementById('musicGenre').addEventListener('change', filterMusic);
+            
+            document.getElementById('actionSearch').addEventListener('input', filterAction);
+            document.getElementById('actionType').addEventListener('change', filterAction);
         });
         
         // Smooth scrolling for anchor links
